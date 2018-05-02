@@ -7,11 +7,11 @@ class Edit extends React.Component{
 	constructor(props){
         super(props);
         this.state = {
-            editor: {},
-            epiSummary: {}
+            editor: {}
         }
         this.saveBlog = this.saveBlog.bind(this);
         this.submitBlog = this.submitBlog.bind(this);
+        this.submitNewEpisode = this.submitNewEpisode.bind(this);
 	}
 	componentDidMount(){
         var toolbarOptions = [
@@ -44,16 +44,8 @@ class Edit extends React.Component{
         this.setState({
             editor: editor
         });
-        let newEpiSummary = new Quill('#newEpiSummary', {
-            modules: {
-                toolbar: toolbarOptions
-            },
-            placeholder: "Type Episode Summary Here...",
-            theme: 'snow'
-        });
         this.setState({
-            editor: editor,
-            epiSummary: newEpiSummary
+            editor: editor
         });
     }
     saveBlog(){
@@ -79,8 +71,30 @@ class Edit extends React.Component{
             }
         })
     }
-    submitNewEpisode(){
-
+    submitNewEpisode(e){
+        e.preventDefault();
+        let form = new FormData();
+        let resources = [];
+        let link = document.getElementById("soundcloud").value;
+        link = link.split('src="')[1].slice(0, link.split('src="')[1].length - 11);
+        form.append("image", document.getElementById("image").files[0]);
+        form.append("number", document.getElementById("number").value);
+        form.append("title", document.getElementById("title").value);
+        form.append("description", document.getElementById("description").value);
+        form.append("summary", document.getElementById("summary").value);
+        form.append("soundcloud", link)
+        form.append("length", document.getElementById("length").value);
+        form.append("resources", resources);
+        $.ajax({
+            type:"POST",
+            url:'/postnewepisode',
+            data: form,
+            contentType: false,
+            processData: false,
+            success: (data)=>{
+                console.log(data)
+            }
+        })
     }
 	render(){
 		return(
@@ -93,12 +107,14 @@ class Edit extends React.Component{
                 </div>
                 <div className='newEpisodeWrapper'>
                     <form id='newEpisodeForm' className='newEpisodeForm'>
-                        <input type='text' placeholder='Title' />
-                        <input type='text' placeholder='Description' />
-                        <input type='text' placeholder='SoundCloud Link' />
-                        <input type='file' name="Episode Image" />
-                        <div id='newEpiSummary'></div>
-                        <input type='submit' value='submit' />
+                        <input id="title" class='newEpisodeInput' type='text' placeholder='Title' />
+                        <input id='number' class='newEpisodeInput' type='text' placeholder="Episode Number" />
+                        <textarea id='summary' class='newEpisodeSummary' type='text' placeholder='Summary'></textarea>
+                        <textarea id='description' class='newEpisodeText' type='text' placeholder='Description'></textarea>
+                        <input id='length' class='newEpisodeInput' type='text' placeholder='Episode Length' />
+                        <input id='soundcloud' class='newEpisodeInput' type='text' placeholder='SoundCloud Link' />
+                        <input id='image' class='newEpisodeInput' type='file' name="Episode Image" />
+                        <input onClick={this.submitNewEpisode} name='image' class='newEpisodeInput' type='submit' value='submit' />
                     </form>
                 </div>
                 <div id='editorpreview' className='editorpreview'>

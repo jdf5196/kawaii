@@ -3,15 +3,15 @@ import { Link, Switch } from 'react-router-dom';
 import yourname from '../../images/yourname.jpg';
 import kawaii from '../../images/kawaii.png';
 import trash from '../../images/trash.png';
-import Data from '../../../data.js';
 import EpisodeList from '../components/epilist.js';
 import EventEmitter from '../events/events.js';
+import Store from '../events/store.js';
 
 class Home extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			podcasts: [],
+			podcasts: [{title:"Placeholder", soundcloudlink: "placeholder", image: "placeholder", }],
 			latest: {},
 			scrolled: false
 		}
@@ -19,10 +19,6 @@ class Home extends React.Component{
 		this.handleScroll = this.handleScroll.bind(this);
 	}
 	componentWillMount(){
-		this.setState({
-			podcasts: Data.podcasts,
-			latest: Data.podcasts[Data.podcasts.length - 1]
-		});
 		window.addEventListener("scroll", (e)=>{
 			let offset = document.querySelector(".latestContents").offsetTop - window.pageYOffset;
 			if(window.location.pathname === "/"){
@@ -31,6 +27,30 @@ class Home extends React.Component{
 		});
 	}
 	componentDidMount(){
+		console.log(Store.podcasts.length);
+		if(Store.podcasts.length > 0){
+			this.setState({
+				podcasts: Store.podcasts,
+				latest: Store.podcasts[0]
+			});
+		}else{
+			$.ajax({
+				type:"PUT",
+				url:'/getallepisodes',
+				success: (data)=>{
+					if(data.length > 0){
+						this.setState({
+							podcasts: data,
+							latest: data[0]
+						});
+						Store.podcasts = data;
+						EventEmitter.dispatch('loadPlayer', {episode: this.state.latest})
+					}else{
+						return
+					}
+				}
+			})
+		}
 		let offset = document.querySelector(".latestContents").offsetTop - window.pageYOffset;
 		this.handleScroll(offset);
 	}
@@ -59,7 +79,7 @@ class Home extends React.Component{
 							<div className='latestContents'>
 								<h1 className='title'>Episode {this.state.latest.episode}: {this.state.latest.title}</h1>
 								<p className='date'>{this.state.latest.date} | {this.state.latest.length}</p>
-								<p className='description'>{this.state.latest.description}</p>
+								<p className='description'>{this.state.latest.summary}</p>
 								<div className='homeBtns'>
 									<button onClick={this.play.bind(this)} className='playBtn' id={`${this.state.title}-play`}>Play Episode</button><button className='playBtn'>More Info</button>
 								</div>

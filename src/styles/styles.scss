@@ -546,6 +546,26 @@ input[type=range] {
       margin-right: auto;
       margin-bottom: 200px;
   }
+  .newEpisodeWrapper{
+    margin-bottom: 200px;
+    /* text-align: center; */
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .newEpisodeInput{
+    display: block;
+    width: 90%;
+    margin-bottom: 15px;
+    padding: 5px;
+  }
+  .newEpisodeText{
+    display: block;
+    width: 90%;
+    height: 100px;
+    padding:5px;
+    margin-bottom:15px;
+  }
   .saveButton{
     font-size:16px;
     margin-left:25px;

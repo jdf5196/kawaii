@@ -7,6 +7,7 @@ const compression = require('compression');
 const db = 'mongodb://localhost/kawaii';
 mongoose.connect(db);
 require('./server/models/blog.js');
+require('./server/models/episode.js');
 const routes = require('./server/routes.js');
 
 const app = express();
