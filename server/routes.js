@@ -9,7 +9,7 @@ const fs = require('fs');
 const multer = require('multer');
 const crypto = require('crypto');
 const path = require('path');
-const db = 'mongodb://localhost/kawaii';
+const db = 'mongodb://127.0.0.1:27017/kawaii';
 
 var storage = multer.diskStorage({
 	destination: './build/images/uploads',
@@ -42,6 +42,7 @@ router.put('/getallblogs', (req, res)=>{
 });
 
 router.post('/postnewepisode', upload.single("image"), (req, res)=>{
+    console.log('upload...');
     let file = `/images/uploads/${req.file.filename}`;
     let episode = new Episode;
     let resources = [];
@@ -55,6 +56,7 @@ router.post('/postnewepisode', upload.single("image"), (req, res)=>{
     episode.resources = resources;
     episode.number = req.body.number;
     episode.save((err, episode)=>{
+        console.log('save')
         if(err){return err};
         res.json(episode)
     })
