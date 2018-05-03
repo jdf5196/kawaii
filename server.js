@@ -4,11 +4,13 @@ const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const db = 'mongodb://localhost/kawaii';
+const db = 'mongodb://127.0.0.1:27017/kawaii';
 mongoose.connect(db);
 require('./server/models/blog.js');
 require('./server/models/episode.js');
 const routes = require('./server/routes.js');
+const Blog = mongoose.model('Blog');
+const Episode = mongoose.model('Episode');
 
 const app = express();
 app.use(compression());

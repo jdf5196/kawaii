@@ -5,8 +5,8 @@ import About from './Pages/about.js';
 import Episodes from './Pages/episodes.js';
 import Episode from './Pages/episode.js';
 import Blog from './Pages/blog.js';
-import Navbar from './Components/navbar.js';
-import Footer from './Components/footer.js';
+import Navbar from './components/navbar.js';
+import Footer from './components/footer.js';
 import Edit from './Pages/edit.js';
 
 class App extends React.Component {
