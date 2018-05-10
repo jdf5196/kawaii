@@ -77,7 +77,7 @@ class Home extends React.Component{
 					<div className='latestContainer'>
 						<div className='epiContainer'>
 							<div className='latestContents'>
-								<h1 className='title'>Episode {this.state.latest.episode}: {this.state.latest.title}</h1>
+								<h1 className='title'>Episode {this.state.latest.number}: {this.state.latest.title}</h1>
 								<p className='date'>{this.state.latest.date} | {this.state.latest.length}</p>
 								<p className='description'>{this.state.latest.summary}</p>
 								<div className='homeBtns'>
@@ -93,10 +93,11 @@ class Home extends React.Component{
 					<hr />
 					<EpisodeList episodes={this.state.podcasts} />
 				</div>
-				<div className='support homeDiv'>
+				<div className='about homeDiv'>
 					<br />
-					<h1 className='supportTitle title'>Support Us</h1>
+					<h1 className='supportTitle title'>Behind the Mic</h1>
 					<hr />
+
 				</div>
 			</div>
 		)

@@ -2,14 +2,21 @@
 
 const mongoose = require('mongoose');
 const express = require('express');
+const passport = require('passport');
+require('./passport.js');
 const router = express.Router();
 const Blog = mongoose.model('Blog');
 const Episode = mongoose.model('Episode');
+const User = mongoose.model('User');
 const fs = require('fs');
 const multer = require('multer');
 const crypto = require('crypto');
 const path = require('path');
 const db = 'mongodb://127.0.0.1:27017/kawaii';
+const jwt = require('express-jwt');
+const secret = process.env.SECRET;
+const Auth = jwt({secret: secret, userProperty: 'payload'});
+
 
 var storage = multer.diskStorage({
 	destination: './build/images/uploads',
@@ -41,7 +48,55 @@ router.put('/getallblogs', (req, res)=>{
     }).sort({$natural:-1});
 });
 
-router.post('/postnewepisode', upload.single("image"), (req, res)=>{
+/*router.post('/register', (req, res)=>{
+    if(!req.body.name || !req.body.pw || !req.body.email){
+        return res.status(400).json({message: 'Please fill out all fields'})
+    }
+    let user = new User;
+    user.name = req.body.name;
+    user.email = req.body.email;
+    user.setPassword(req.body.pw);
+    console.log(user);
+    user.save((err)=>{
+        if(err){
+            return res.status(400).json({message: "Username or email already in use"});
+        }else{
+            return res.json({token: user.generateJWT()})
+        }
+    });
+});*/
+router.post('/register', (req, res)=>{
+    if(!req.body.name || !req.body.pw || !req.body.email){
+        return res.status(400).json({message: 'Please fill out all fields'})
+    }
+    let user = new User;
+    user.name = req.body.name;
+    user.email = req.body.email;
+    user.setPassword(req.body.pw);
+    console.log(user);
+    user.save((err)=>{
+        if(err){
+            return res.status(400).json({message: "Username or email already in use"});
+        }else{
+            return res.json({token: user.generateJWT()})
+        }
+    });
+});
+router.post('/login', (req, res)=>{
+    if(!req.body.username || !req.body.password){
+        return res.status(400).json({message: "Please fill out all fields."});
+    }
+    passport.authenticate('local', (err, user, info)=>{
+        if(err){return err}
+        if(user){
+            return res.json({token: user.generateJWT()})
+        }else{
+            return res.status(401).json(info);
+        }
+    })
+})
+
+router.post('/postnewepisode', Auth, upload.single("image"), (req, res)=>{
     console.log('upload...');
     let file = `/images/uploads/${req.file.filename}`;
     let episode = new Episode;

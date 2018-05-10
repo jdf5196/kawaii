@@ -12,7 +12,7 @@ import Edit from './Pages/edit.js';
 class App extends React.Component {
     render(){
         return (
-            <div>
+            <div id='appWrapper'>
                 <Navbar />
                 <Route exact path='/' component={Home} />
                 <Route exact path='/about' component={About} />

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, Switch } from 'react-router-dom';
 import EventEmitter from '../events/events.js';
+import Auth from '../events/auth.js';
 import Quill from 'quill';
 
 class Edit extends React.Component{
@@ -12,6 +13,7 @@ class Edit extends React.Component{
         this.saveBlog = this.saveBlog.bind(this);
         this.submitBlog = this.submitBlog.bind(this);
         this.submitNewEpisode = this.submitNewEpisode.bind(this);
+        this.register = this.register.bind(this);
 	}
 	componentDidMount(){
         var toolbarOptions = [
@@ -68,7 +70,10 @@ class Edit extends React.Component{
             data: data,
             success: (data)=>{
                 console.log(data)
-            }
+            },
+			beforeSend: (xhr, settings)=>{
+				xhr.setRequestHeader('Authorization', 'Bearer ' + Auth.getToken())
+			}
         })
     }
     submitNewEpisode(e){
@@ -93,6 +98,41 @@ class Edit extends React.Component{
             processData: false,
             success: (data)=>{
                 console.log(data)
+            },
+			beforeSend: (xhr, settings)=>{
+				xhr.setRequestHeader('Authorization', 'Bearer ' + Auth.getToken())
+			}
+        })
+    }
+    register(e){
+        e.preventDefault();
+        let data = {
+            name: document.getElementById("name").value,
+            pw: document.getElementById("password").value,
+            email: document.getElementById('email').value
+        }
+        $.ajax({
+            type: "POST",
+            url: '/register',
+            data: data,
+            success: (d)=>{
+                Auth.saveToken(d.token)
+            }
+        })
+    }
+    login(){
+        e.preventDefault();
+        let form = new FormData();
+        form.append("username", document.getElementById('username'));
+        form.append("password", document.getElementById('loginPassword'));
+        $.ajax({
+            type: "POST",
+            url: '/login',
+            data: form,
+            contentType: false,
+            processData: false,
+            success: (data)=>{
+                Auth.saveToken(data.token)
             }
         })
     }
@@ -100,6 +140,14 @@ class Edit extends React.Component{
 		return(
 			<div className='wrapper'>
                 <p>Edit</p>
+                <div className='login'>
+                    <form id='register'>
+                        <input id='name' type='text' required placeholder='Username' />
+                        <input id='email' type='text' required placeholder='Email' />
+                        <input id='password' type='text' required placeholder='Password' />
+                        <input onClick={this.register.bind(this)} type='submit' value='Submit' />
+                    </form>
+                </div>
                 <div className='editWrapper'>
                     <div id='editor'>
                     </div>
