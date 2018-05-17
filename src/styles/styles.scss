@@ -483,6 +483,7 @@ input[type=range] {
   //Episode List
   .epiList{
       list-style: none;
+      padding:0px;
   }
 
   //Episode Card
@@ -533,7 +534,7 @@ input[type=range] {
                     margin-left:10px;
                     margin-right:10px;
                     height:36px;
-                    width:200px;
+                    width:35%;
                     background-color:#cf54fc;
                     border:solid 1px $c1;
                     color:white;
@@ -633,4 +634,54 @@ input[type=range] {
   }
   .show{
       display:block !important;
+  }
+
+  // Social List
+  .social{
+      position:fixed;
+      bottom:0;
+      right:0;
+      height:50px;
+      width:50px;
+      background:pink;
+      color:black;
+      border-radius:100%;
+  }
+
+  @media (max-width: 800px){
+      .episodeCard{
+        width: 80%;
+        height: auto;
+        .epiCardImage{
+            float:none;
+            width:100%;
+            height:70%;
+            img{
+                border-radius:0px;
+            }
+        }
+        .epiCardInfo{
+            padding-top:5px;
+            float:none;
+            width:100%;
+            height:200px;
+            margin-top:-20px;
+            .epiCardTitle{
+                font-size:15px;
+            }
+            .epiCardDescription{
+                font-size:13px;
+            }
+        }
+      }
+  }
+
+  @media (max-width: 740px){
+      .socialList{
+          display:none;
+      }
+      .linkList{
+          float:right;
+          margin-right:0px !important;
+      }
   }

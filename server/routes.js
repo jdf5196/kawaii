@@ -47,24 +47,6 @@ router.put('/getallblogs', (req, res)=>{
         res.json(blogs)
     }).sort({$natural:-1});
 });
-
-/*router.post('/register', (req, res)=>{
-    if(!req.body.name || !req.body.pw || !req.body.email){
-        return res.status(400).json({message: 'Please fill out all fields'})
-    }
-    let user = new User;
-    user.name = req.body.name;
-    user.email = req.body.email;
-    user.setPassword(req.body.pw);
-    console.log(user);
-    user.save((err)=>{
-        if(err){
-            return res.status(400).json({message: "Username or email already in use"});
-        }else{
-            return res.json({token: user.generateJWT()})
-        }
-    });
-});*/
 router.post('/register', (req, res)=>{
     if(!req.body.name || !req.body.pw || !req.body.email){
         return res.status(400).json({message: 'Please fill out all fields'})
