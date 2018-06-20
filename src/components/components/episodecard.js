@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import EventEmitter from '../events/events.js';
+import Store from '../events/store.js';
 
 const EpisodeCard = (props)=>{
     let play = ()=>{
@@ -15,7 +16,7 @@ const EpisodeCard = (props)=>{
                 <h2 className='epiCardText epiCardTitle'>Episode {props.episode.number}: {props.title}</h2>
                 <p className='epiCardText epiCardDescription'>{props.episode.summary}</p>
                 <div className='epiButtonDiv'>
-                    <button onClick={play} className='epiButton play'>Play Episode</button><button className='epiButton info'>More Info</button>
+                    <button onClick={play} className='epiButton play'>Play Episode</button><Link to={`/episodes/${props.episode.url}`} name='episode' className='epiButton info'>More Info</Link>
                 </div>
             </div>
         </div>

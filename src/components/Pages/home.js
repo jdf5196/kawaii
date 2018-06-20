@@ -4,8 +4,10 @@ import yourname from '../../images/yourname.jpg';
 import kawaii from '../../images/kawaii.png';
 import trash from '../../images/trash.png';
 import EpisodeList from '../components/epilist.js';
+import Logo from '../components/logo.js';
+import About from '../components/about.js';
+import Contact from '../components/contact.js';
 import EventEmitter from '../events/events.js';
-import Store from '../events/store.js';
 
 class Home extends React.Component{
 	constructor(props){
@@ -20,37 +22,29 @@ class Home extends React.Component{
 	}
 	componentWillMount(){
 		window.addEventListener("scroll", (e)=>{
-			let offset = document.querySelector(".latestContents").offsetTop - window.pageYOffset;
+			let offset = document.querySelector(".latestContents").offsetTop - window.pageYOffset - 25;
 			if(window.location.pathname === "/"){
 				this.handleScroll(offset);
 			}
 		});
 	}
 	componentDidMount(){
-		console.log(Store.podcasts.length);
-		if(Store.podcasts.length > 0){
-			this.setState({
-				podcasts: Store.podcasts,
-				latest: Store.podcasts[0]
-			});
-		}else{
+		window.scrollTo(0, 0);
 			$.ajax({
 				type:"PUT",
-				url:'/getallepisodes',
+				url:'/getfiveepisodes',
 				success: (data)=>{
 					if(data.length > 0){
 						this.setState({
 							podcasts: data,
 							latest: data[0]
 						});
-						Store.podcasts = data;
 						EventEmitter.dispatch('loadPlayer', {episode: this.state.latest})
 					}else{
 						return
 					}
 				}
 			})
-		}
 		let offset = document.querySelector(".latestContents").offsetTop - window.pageYOffset;
 		this.handleScroll(offset);
 	}
@@ -77,13 +71,14 @@ class Home extends React.Component{
 					<div className='latestContainer'>
 						<div className='epiContainer'>
 							<div className='latestContents'>
+								<Logo />
 								<h1 className='title'>Episode {this.state.latest.number}: {this.state.latest.title}</h1>
 								<p className='date'>{this.state.latest.date} | {this.state.latest.length}</p>
 								<p className='description'>{this.state.latest.summary}</p>
 								<div className='homeBtns'>
-									<button onClick={this.play.bind(this)} className='playBtn' id={`${this.state.title}-play`}>Play Episode</button><button className='playBtn'>More Info</button>
+									<button onClick={this.play.bind(this)} className='playBtn' id={`${this.state.latest.title}-play`}>Play Episode</button><Link to={`/episodes/${this.state.latest.url}`} style={{ textDecoration: 'none', height: '50px', width:'110px'}} name='episode' className='playBtn'>More Info</Link>
 								</div>
-								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -92,12 +87,9 @@ class Home extends React.Component{
 					<h1 className='latestTitle title'>Latest Episodes</h1>
 					<hr />
 					<EpisodeList episodes={this.state.podcasts} />
-				</div>
-				<div className='about homeDiv'>
-					<br />
-					<h1 className='supportTitle title'>Behind the Mic</h1>
-					<hr />
-
+					<Link className='allBtn' to='/episodes'>See all Episodes</Link>
+					<About />	
+					<Contact />			
 				</div>
 			</div>
 		)

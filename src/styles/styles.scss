@@ -1,7 +1,7 @@
 // Colors
 $c1: #005867;
-$l1: #f94afc;
-$l2: #03fa30;
+$l1: #fca1fd;
+$l2: #58fb58;
 
 // General
 html, body{
@@ -10,7 +10,7 @@ html, body{
 }
 body{
     margin:0;
-    background-color:white;
+    background-color: #e7f4ff;
     font-family: Montserrat,sans-serif;
 }
 .wrapper{
@@ -39,7 +39,8 @@ body{
         line-height: 100px;
         margin-left: 40px;
         font-size: 25px;
-        width:140px;
+        width:50px;
+        height:100%;
         cursor:pointer;
         transition:line-height 0.25s;
         text-decoration:none;
@@ -52,7 +53,7 @@ body{
     .linkList{
         text-align: center;
         line-height: 100px;
-        margin-right: 180px;
+        margin-right: 90px;
         transition:line-height 0.25s;
         .navbtn{
             color: white;
@@ -68,7 +69,7 @@ body{
     }
     .socialList{
         float:right;
-        margin-top: -60px;
+        margin-top: 25px;
         margin-right: 40px;
         transition: margin-top 0.25s;
         .socialIcon{
@@ -94,7 +95,7 @@ body{
     background-color: $c1 !important;
 }
 .shortSocial{
-    margin-top:-36px !important;
+    margin-top:16px !important;
 }
 // Home Page
 .homeHeader{
@@ -118,7 +119,7 @@ body{
                 z-index: 10;
                 text-align: center;
                 position: absolute;
-                top: calc(50% - 175px);
+                top: 15%;
                 left: calc(50% - (80%/2));
                 height: 350px;
                 .description{
@@ -141,6 +142,9 @@ body{
         }
     }
 }
+.epiContainer{
+    margin-bottom:100px;
+}
 .recent{
     margin-top:50px;
     width: 100%;
@@ -155,22 +159,27 @@ body{
 .playBtn{
     cursor: pointer;
     height: 50px;
-    width: 110px;
+    width: 130px;
     vertical-align: middle;
     margin-top: -3px;
     background-color: rgba(80, 0, 105, 0.24);
     color: white;
     border-radius: 10px;
     border-color: #fc00ff;
-    font-size:16px;
-    margin-left:20px;
-    margin-right:20px;
+    font-size: 16px;
+    margin-left: 20px;
+    margin-right: 20px;
+    text-decoration: none;
+    display: inline-block;
+    border: solid 1px #fc00ff;
+    line-height: 50px;
+    font-family: Montserrat,sans-serif;
     &:hover{
         background-color:$c1;
     }
 }
 .homeDiv{
-    margin-bottom:100px;
+    margin-bottom:50px;
     h1{
         text-align:center;
     }
@@ -482,14 +491,30 @@ input[type=range] {
   }
   //Episode List
   .epiList{
+      width:70%;
       list-style: none;
       padding:0px;
+      margin-left: auto;
+      margin-right: auto;
+  }
+  .allBtn{
+    width: 140px;
+    height: 60px;
+    background: #222;
+    color: white;
+    display: block;
+    font-size: 15px;
+    line-height: 60px;
+    text-align: center;
+    text-decoration: none;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   //Episode Card
   .episodeCard{
       position:relative;
-      width: 70%;
+      width: 100%;
       max-width:900px;
       height: 210px;
       margin-left: auto;
@@ -548,13 +573,31 @@ input[type=range] {
                 }
                 .play{
                     background-color:#cf54fc;
+                    float: left;
+                    margin-left: 35px;
                 }
                 .info{
                     background-color:#54d4fc;
+                    float: right;
+                    margin-right: 35px;
+                    line-height: 36px;
+                    text-decoration: none;
                 }
             }
       }
   }
+
+.epiWrapper{
+    padding-top:100px;
+    height: 100%;
+    width:80%;
+    margin-left:auto;
+    margin-right:auto;
+    h1{
+        text-align:center;
+    }
+}
+
   .episodeCard:before{
     content: "";
     position: absolute;
@@ -577,7 +620,7 @@ input[type=range] {
       margin-bottom: 200px;
   }
   .newEpisodeWrapper{
-    margin-bottom: 200px;
+    margin-bottom: 25px;
     /* text-align: center; */
     max-width: 500px;
     margin-left: auto;
@@ -585,14 +628,21 @@ input[type=range] {
   }
   .newEpisodeInput{
     display: block;
-    width: 90%;
+    width: 99%;
     margin-bottom: 15px;
-    padding: 5px;
+    font-size: 16px;
+    height: 20px;
+  }
+  .newEpisodeImage{
+      max-width:80%;
+  }
+  .selectLabel{
+      font-size:12px;
   }
   .newEpisodeText{
     display: block;
     width: 90%;
-    height: 100px;
+    height: 200px;
     padding:5px;
     margin-bottom:15px;
   }
@@ -635,6 +685,143 @@ input[type=range] {
   .show{
       display:block !important;
   }
+// About Section
+.aboutContainer{
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #ffffff;
+    padding-top: 25px;
+    margin-top: 50px;
+    padding-bottom: 25px;
+    h1{
+        text-align:center;
+    }
+    .aboutCard{
+        width: 75%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .aboutImage{
+        width: 160px;
+        margin-left: auto;
+        margin-right: auto;
+        img{
+            width: 160px;
+            border-style: double;
+            border-color: #ced7e2;
+            border-radius: 50% 50% 50% 50%;
+        }
+    }
+    h2{
+        text-align:center;
+    }
+    h3{
+        text-align: center;
+        color: #003ba9;
+        font-size: 17px;
+        font-style: italic;
+    }
+}
+
+// Contact Section
+.contactContainer{
+    padding-top:25px;
+    .contactForm{
+        width:70%;
+        max-width:900px;
+        min-height:300px;
+        margin-bottom:15px;
+        font-size:15px;
+        border-radius: 5px;
+        margin-right:auto;
+        margin-left:auto;
+        margin-top:50px;
+        text-align:left;
+        .contactInput{
+            border-left:none;
+            border-right:none;
+            border-top:none;
+            border-radius:0px;
+            border-bottom: solid 1px #333;
+            min-width:100%;
+            margin-bottom:30px;
+            font-size:16px;
+            box-sizing: border-box;
+            background: #e7f4ff;
+            box-shadow:none !important;
+            &:focus{
+                outline:none;
+                border-bottom:solid 1px #00b4c1;
+            }
+        }
+        .inputText{
+            height:25px;
+        }
+        .message{
+            height:100px;
+            resize:none;
+        }
+        .label{
+            font-size:16px;
+            position:absolute;
+            pointer-events:none;
+        }
+        .nameLabel, .emailLabel{
+            position:absolute;
+            margin-top:-52px;
+            margin-left:1px;
+            transition: all 0.3s;
+        }
+        .messageLabel{
+            margin-top:-130px;
+            margin-left:2px;
+            transition:all 0.3s;
+        }
+        #name:focus ~ .nameLabel, #email:focus ~ .emailLabel{
+            margin-top:-75px;
+            font-size:13px;
+            color: #00b4c1;
+            transition:all 0.3s;
+        }
+        #name:not(:placeholder-shown) ~ .nameLabel, #email:not(:placeholder-shown) ~ .emailLabel{
+            margin-top:-75px;
+            font-size:13px;
+        }
+        #name:focus + .userIcon, #email:focus + .envelopeIcon{
+            color:#00b4c1;
+            transition:all 0.3s;
+        }
+        
+        #message:focus ~ .messageLabel{
+            color:#00b4c1 !important;
+            margin-top:-154px !important;
+            font-size:13px !important;
+            transition:all 0.3s !important;
+        }
+        
+        #message:not(:placeholder-shown) ~ .messageLabel{
+            margin-top:-154px !important;
+            font-size:13px !important;
+        }
+        .submitButton{
+            float:left;
+            background-color:#1a6c88;
+            color:white;
+            border:none;
+            width:150px;
+            height:35px;
+            font-size:15px;
+            cursor:pointer;
+            border-radius:3px;
+            transition: background .5s, color .5s;
+            &:hover{
+                background:rgba(0,180,193,0.5);
+                color:black;
+            }
+        }
+    }
+}
 
   // Social List
   .social{
@@ -647,6 +834,149 @@ input[type=range] {
       color:black;
       border-radius:100%;
   }
+
+.descriptionWrapper{
+    margin-bottom:100px;
+    max-width:60%;
+    margin-left:auto;
+    margin-right:auto;
+    h1{
+        text-align:center;
+    }
+}
+.mainLogo{
+    transform: scale(1.25);
+    text-align:center;
+}
+.logoLeft, .logoRight{
+    display:inline-block;
+    margin-right:5px;
+    margin-left:5px;
+}
+.logoLine{
+    transition:background 3s;
+}
+.logoLetter{
+    display:inline-block;
+    margin-top: 0;
+    margin-left: 9px;
+    margin-right: 9px;
+    margin-bottom: 0px;
+    color:$l2;
+    text-transform: uppercase;
+    text-shadow: -1px 1px black;
+    transition:color 3s;
+}
+.topGroup{
+    display:inline-block;
+    margin-left: 2px;
+    margin-right: 2px;
+    .thin{
+        display:inline-block;
+        height:50px;
+        width:2px;
+        margin-left: 1px;
+        margin-right: 1px;
+        background:$l2;
+        box-shadow: -0.5px 0.5px #000000;
+    }
+    .thick{
+        display:inline-block;
+        height:50px;
+        width:5px;
+        margin-left: 1px;
+        margin-right: 1px;
+        background:$l2;
+        box-shadow: -0.5px 0.5px #000000;
+    }
+}
+.newEpisodeSummary{
+    width: 99%;
+    font-size: 16px;
+    height: 80px;
+}
+.deleteImage{
+    display: block;
+    margin-bottom: 15px;
+    height: 50px;
+    width: 100px;
+    background: #ffa9a9;
+    font-size: 16px;
+    color: white;
+    border-radius: 10px;
+}
+.resource{
+    position:relative;
+}
+.resourceBtn{
+    position:absolute;
+    height:25px;
+    width:50px;
+    font-size: 12px;
+    line-height: 25px;
+    text-align: center;
+    border-radius: 6px;
+    cursor:pointer;
+}
+.resourceBtn.add{
+    background:green;
+}
+.resourceBtn.delete{
+    background: #ffc9c9;
+    top: -2px;
+    left: 115px;
+    
+}
+.ql-container{
+    width:100%;
+}
+.ql-editor{
+    font-size:16px;
+}
+.logDiv{
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 15px;
+    .logoutBtn{
+        width: 125px;
+        height: 35px;
+        background: #ffc7c7;
+        font-size: 20px;
+        border-radius: 10px;
+    }
+    .changeBtn{
+        width: 125px;
+        height: 50px;
+        background: #c9ffc7;
+        font-size: 20px;
+        border-radius: 10px
+    }
+    p{
+        text-align:left;
+    }
+    input{
+        width: 100%;
+        display: block;
+        margin-bottom: 15px;
+        height: 20px;
+        font-size: 16px;
+    }
+}
+.collapsible{
+    background-color: #777;
+    color:white;
+    cursor:pointer;
+    padding: 18px;
+    width:100%;
+    border:none;
+    text-align:left;
+    outline:none;
+    font-size:15px;
+}
 
   @media (max-width: 800px){
       .episodeCard{
@@ -674,14 +1004,49 @@ input[type=range] {
             }
         }
       }
+      .descriptionWrapper{
+        max-width:80% !important;
+    }
   }
 
   @media (max-width: 740px){
-      .socialList{
-          display:none;
+      .nav{
+          height:50px !important;
+          font-size:12px !important;
+          .logo{
+              line-height:50px !important;
+              width:50px !important;
+          }
+          .linkList{
+              line-height:50px !important;
+              float:right;
+                margin-right:0px !important;
+          }
+          .socialList{
+              display:none;
+          }
       }
-      .linkList{
-          float:right;
-          margin-right:0px !important;
+      .title{
+          font-size:30px !important;
       }
+      .mainLogo{
+          transform:scale(1);
+      }
+      .latestContents{
+          width:90% !important;
+          left: calc(50% - (90%/2)) !important;
+          .date{
+              font-size:13px !important;
+          }
+          .description{
+              font-size:15px !important;
+          }
+      }
+  }
+
+  .toast-top-center{
+      margin-top:50px !important;
+  }
+  .allEpisodes{
+      margin-bottom:100px;
   }

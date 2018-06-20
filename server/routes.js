@@ -8,14 +8,23 @@ const router = express.Router();
 const Blog = mongoose.model('Blog');
 const Episode = mongoose.model('Episode');
 const User = mongoose.model('User');
+const nodemailer = require('nodemailer');
 const fs = require('fs');
 const multer = require('multer');
 const crypto = require('crypto');
 const path = require('path');
 const db = 'mongodb://127.0.0.1:27017/kawaii';
 const jwt = require('express-jwt');
+const uuid = require('node-uuid');
 const secret = process.env.SECRET;
 const Auth = jwt({secret: secret, userProperty: 'payload'});
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: process.env.EMAILADDRESS,
+        pass: process.env.EPASS
+    }
+})
 
 
 var storage = multer.diskStorage({
@@ -48,23 +57,38 @@ router.put('/getallblogs', (req, res)=>{
     }).sort({$natural:-1});
 });
 router.post('/register', (req, res)=>{
-    if(!req.body.name || !req.body.pw || !req.body.email){
+    if(!req.body.name || !req.body.email){
         return res.status(400).json({message: 'Please fill out all fields'})
     }
     let user = new User;
+    let pw = uuid.v4();
     user.name = req.body.name;
     user.email = req.body.email;
-    user.setPassword(req.body.pw);
-    console.log(user);
+    user.setPassword(pw);
+    const message = `Username: ${req.body.name}\nEmail: ${req.body.email}\nPassword: ${pw}`
     user.save((err)=>{
         if(err){
-            return res.status(400).json({message: "Username or email already in use"});
+            return res.status(400).json({message: "Username already in use"});
         }else{
-            return res.json({token: user.generateJWT()})
+            transporter.sendMail({
+                from:process.env.EMAILADDRESS,
+                to: 'jfrancona87@gmail.com',
+                subject: `New Kawaiitrash.com user Registered`,
+                text: message,
+                html: message
+            }, (err)=>{
+                if(err){
+                    console.log(err);
+                    res.status(500).send('Failed to send');
+                }
+                transporter.close();
+                res.json('Success')
+            })
         }
     });
 });
 router.post('/login', (req, res)=>{
+    console.log(req.body.username);
     if(!req.body.username || !req.body.password){
         return res.status(400).json({message: "Please fill out all fields."});
     }
@@ -75,35 +99,174 @@ router.post('/login', (req, res)=>{
         }else{
             return res.status(401).json(info);
         }
-    })
+    })(req, res);
+});
+
+router.put('/changepassword', Auth, (req, res)=>{
+    if(!req.body.id || !req.body.username || !req.body.password || !req.body.newPw){
+        return res.status(400).json({message: "Please fill out all fields."})
+    }
+    passport.authenticate('local', (err, user, info)=>{
+        if(err){return err}
+        if(user){
+            user.setPassword(req.body.newPw);
+            user.save((err, user)=>{
+                if(err){return err;}
+                res.json({message: 'success'})
+            })
+        }else{
+            return res.status(401).json(info);
+        }
+    })(req, res);
 })
 
 router.post('/postnewepisode', Auth, upload.single("image"), (req, res)=>{
-    console.log('upload...');
+    console.log(req.body);
     let file = `/images/uploads/${req.file.filename}`;
     let episode = new Episode;
     let resources = [];
+    let url = req.body.title.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ").split(" ").join("-");
+    console.log(url);
     episode.title = req.body.title;
+    episode.url = url;
     episode.description = req.body.description;
     episode.summary = req.body.summary;
     episode.soundcloudlink = req.body.soundcloud;
+    episode.rawsoundcloud = req.body.rawsoundcloud;
     episode.date = getDate();
     episode.length = req.body.length;
     episode.image = file;
     episode.resources = resources;
     episode.number = req.body.number;
-    episode.save((err, episode)=>{
-        console.log('save')
+    episode.user = req.body.userid;
+    episode.save((err, epi)=>{
         if(err){return err};
-        res.json(episode)
+        User.findOne({_id: req.body.userid}, (err, user)=>{
+            if(err){return err}
+            user.episodes.push(epi._id);
+            user.save((err, u)=>{
+                if(err){return err}
+                res.json(epi)
+            })
+        })
     })
 });
+router.post('/updateepisode', Auth, (req, res)=>{
+    Episode.findOne({_id: req.body.id}, (err, epi)=>{
+        if(err){return err};
+        epi.title = req.body.title;
+        epi.url = req.body.url;
+        epi.description = req.body.description;
+        epi.summary = req.body.summary;
+        epi.soundcloudlink = req.body.soundcloud;
+        epi.rawsoundcloud = req.body.rawsoundcloud;
+        epi.date = req.body.date;
+        epi.length = req.body.length;
+        epi.resources = req.body.resources;
+        epi.number = req.body.number;
+        epi.save((err, ep)=>{
+            if(err){return err};
+            res.json(ep)
+        })
+    })
+});
+
+router.post('/updateepisodeimage', Auth, upload.single("image"), (req, res)=>{
+    let file = `/images/uploads/${req.file.filename}`;
+    Episode.findOne({_id: req.body.id}, (err, epi)=>{
+        console.log(epi);
+        if(err){return err}
+        epi.title = req.body.title;
+        epi.url = req.body.url;
+        epi.description = req.body.description;
+        epi.summary = req.body.summary;
+        epi.soundcloudlink = req.body.soundcloud;
+        epi.rawsoundcloud = req.body.rawsoundcloud;
+        epi.date = req.body.date;
+        epi.length = req.body.length;
+        epi.resources = req.body.resources;
+        epi.number = req.body.number;
+        epi.image = file;
+        epi.save((err, ep)=>{
+            if(err){return err};
+            res.json(ep)
+        })
+    })
+});
+
+router.delete('/deleteepisode', Auth, (req, res)=>{
+    Episode.findOne({_id: req.body.id}, (err, epi)=>{
+        if(err){return err};
+        Episode.remove({_id: req.body.id}, (err)=>{
+            if(err){return err}
+            User.findOne({_id: epi.user}, (err, user)=>{
+                if(err){return err}
+                let i = user.episodes.indexOf(req.body.id);
+                if(i > -1){
+                    user.episodes.splice(i, 1);
+                }
+                user.save((err, u)=>{
+                    if(err){return err}
+                })
+            })
+            res.send('success');
+        })
+    })
+})
 
 router.put('/getallepisodes', (req, res)=>{
     Episode.find((err, episodes)=>{
         if(err){return err};
         res.json(episodes)
     }).sort({$natural:-1});
+})
+
+router.put('/getfiveepisodes', (req,res)=>{
+    Episode.find((err, episodes)=>{
+        if(err){return err};
+        let epis = [];
+        episodes.map((epi)=>{
+            let sode = {
+                _id: epi._id,
+                number: epi.number,
+                title: epi.title,
+                url: epi.url,
+                summary: epi.summary,
+                soundcloudlink: epi.soundcloudlink,
+                date: epi.date,
+                length: epi.length,
+                image: epi.image
+            }
+            epis.push(sode)
+        })
+        res.json(epis)
+    }).limit(5).sort({$natural:-1});
+})
+
+router.put('/getepisode', (req,res)=>{
+    Episode.findOne({url:req.body.url}, (err, epi)=>{
+        if(err){return err}
+        console.log(epi)
+        res.json(epi)
+    })
+})
+
+router.post('/sendemail', (req, res)=>{
+    transporter.sendMail({
+        from:process.env.EMAILADDRESS,
+        to: 'jfrancona87@gmail.com',
+        subject: `Website Message from ${req.body.name}`,
+        replyTo: req.body.email,
+        text: req.body.message,
+        html: req.body.message
+    }, (err)=>{
+        if(err){
+            console.log(err);
+            res.status(500).send('Failed to send');
+        }
+        transporter.close();
+        res.json('Success')
+    })
 })
 
 const getDate = ()=>{

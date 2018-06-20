@@ -1,6 +1,7 @@
 let Store = {
     podcasts: [],
-    blogs: []
+    blogs: [],
+    playerEpi: ""
 }
 
 export default Store;

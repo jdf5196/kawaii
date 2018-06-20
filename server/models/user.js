@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const secret = process.env.SECRET;
 const UserSchema = new mongoose.Schema({
     name: {type:String, lowercase: true, unique: true},
+    email: {type:String},
     blogs: [String],
     episodes: [String],
     hash: String,

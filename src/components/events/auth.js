@@ -43,7 +43,7 @@ Auth.currentUserID = ()=>{
     }
 }
 
-Auth.isLoggedOut = ()=>{
+Auth.logout = ()=>{
     localStorage.removeItem('kawaii')
 }
 

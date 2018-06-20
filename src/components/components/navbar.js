@@ -18,31 +18,21 @@ const Navbar = (props)=>{
         let nav = document.getElementById("nav");
         let logo = document.getElementById("logo");
         let socialList = document.getElementById("socialList");
-        let linkList = document.getElementById("linkList");
         if(type === "scrolled"){
             nav.classList.add("navSmall");
             logo.classList.add('smallerLine');
             socialList.classList.add('shortSocial');
-            linkList.classList.add('smallerLine');
         }else{
             nav.classList.remove("navSmall");
             logo.classList.remove('smallerLine');
             socialList.classList.remove('shortSocial');
-            linkList.classList.remove('smallerLine');
         }
     }
 	return(
         <nav id='nav' className='nav hidden'>
             <Link id='logo' to='/' className='logo'>
-                <p className='kawaii'>Kawaii</p>
-                <p className='trash'>Trash</p>
+            <svg width="40" height="50" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M704 736v576q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-576q0-14 9-23t23-9h64q14 0 23 9t9 23zm256 0v576q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-576q0-14 9-23t23-9h64q14 0 23 9t9 23zm256 0v576q0 14-9 23t-23 9h-64q-14 0-23-9t-9-23v-576q0-14 9-23t23-9h64q14 0 23 9t9 23zm128 724v-948h-896v948q0 22 7 40.5t14.5 27 10.5 8.5h832q3 0 10.5-8.5t14.5-27 7-40.5zm-672-1076h448l-48-117q-7-9-17-11h-317q-10 2-17 11zm928 32v64q0 14-9 23t-23 9h-96v948q0 83-47 143.5t-113 60.5h-832q-66 0-113-58.5t-47-141.5v-952h-96q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h309l70-167q15-37 54-63t79-26h320q40 0 79 26t54 63l70 167h309q14 0 23 9t9 23z" fill="#fff"/></svg>
             </Link>
-            <div id='linkList' className='linkList'>
-                <Link to='/about' name='about' className='navbtn'>About</Link>
-                <Link to='/episodes' name='episodes' className='navbtn'>Episodes</Link>
-                <Link to='/blog' name='blog' className='navbtn'>Blog</Link>
-                <Link to='/support' name='support' className='navbtn'>Support</Link>
-            </div>
             <div id='socialList' className='socialList'>
                 <a href='https://twitter.com/kawaiitrashpodc' target="_blank" className='twitter socialIcon'>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">

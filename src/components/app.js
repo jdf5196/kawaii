@@ -9,6 +9,7 @@ import Navbar from './components/navbar.js';
 import Footer from './components/footer.js';
 import Edit from './Pages/edit.js';
 import Social from './components/social.js';
+import '../../node_modules/toastr/toastr.scss';
 
 class App extends React.Component {
     render(){

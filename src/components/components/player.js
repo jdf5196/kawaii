@@ -28,7 +28,8 @@ class Player extends React.Component{
             overVolume: false,
             volume:0,
             muted:false,
-            previousNum: 0
+            previousNum: 0,
+            playingSame: false
         }
         this.play = this.play.bind(this);
         this.pause = this.pause.bind(this);
@@ -43,9 +44,6 @@ class Player extends React.Component{
     }
 
     componentDidMount(){
-        EventEmitter.subscribe("sameEpisode", (data)=>{
-            this.play()
-        });
         const fill = document.querySelector(".filledProgressBar");
         const handle = document.querySelector(".progressHandle");
         const background = document.querySelector(".progressBackground");
@@ -130,14 +128,20 @@ class Player extends React.Component{
             }(eventName, eventKey))
         }
     }
-    play(event){
-        this.state.player.setVolume(this.state.volume);
-        this.state.player.play();
-        this.setState({
-            play: true
-        })
-        document.querySelector(`[name="${this.props.instance}-playbutton"]`).classList.add('hid');
-        document.querySelector(`[name="${this.props.instance}-pausebutton"]`).classList.remove('hid');
+    play(){
+        if(this.state.play){
+            this.pause();
+            this.setState({play:false})
+        }else{
+            this.state.player.setVolume(this.state.volume);
+            this.state.player.play();
+            this.setState({
+                play: true
+            })
+            document.querySelector(`[name="${this.props.instance}-playbutton"]`).classList.add('hid');
+            document.querySelector(`[name="${this.props.instance}-pausebutton"]`).classList.remove('hid');
+        }
+        
     }
     pause(){
         this.state.player.pause();
@@ -348,7 +352,7 @@ class Player extends React.Component{
                         <use id='volumeSVG' fill='#ffffff' xlinkHref="/svg/sprites.svg#volume-down" />
                     </svg>
                 </div>
-                <iframe name={`${this.props.instance}-iframe`} width='1000' height="1000" title={this.props.title} className='playerFrame' scrolling="no" frameborder="no" src={this.props.soundcloudlink}></iframe>								
+                <iframe name={`${this.props.instance}-iframe`} width='1000' height="1000" title={this.props.title} className='playerFrame' scrolling="no" frameBorder="no" src={this.props.soundcloudlink}></iframe>								
             </div>
         )
     }
