@@ -49,18 +49,72 @@ class Player extends React.Component{
         const background = document.querySelector(".progressBackground");
         const vBlock = document.querySelector(".volumeBlock");
         const block = document.querySelector(".block");
+        block.addEventListener('mousedown', (event)=>{
+            this.clicked(event);
+        })
         block.addEventListener('mousemove', (event)=>{
             if(this.state.mousedown){
                 this.clickInput(event);
             }
             this.playerHover(event);
         });
+        block.addEventListener('mouseup', (event)=>{
+            this.clicked.bind(event)
+        });
+        vBlock.addEventListener('mousedown', (event)=>{
+            this.clickedVolume(event);
+        })
         vBlock.addEventListener('mousemove', (event)=>{
             event.preventDefault();
             if(this.state.volumeClicked){
                 this.changeVolume(event, null)
             }
         });
+        vBlock.addEventListener('mouseup', (event)=>{
+            this.clickedVolume(event)
+        })
+        block.addEventListener("touchstart", (e)=>{
+            e.preventDefault();
+            let touch = e.touches[0];
+            let mouseEvent = new MouseEvent("mousedown", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            block.dispatchEvent(mouseEvent);
+        });
+        block.addEventListener("touchend", (e)=>{
+            let mouseEvent = new MouseEvent("mouseup", {});
+            block.dispatchEvent(mouseEvent);
+        });
+        block.addEventListener("touchmove", (e)=>{
+            let touch = e.touches[0];
+            let mouseEvent = new MouseEvent('mousemove', {
+              clientX: touch.clientX,
+              clientY: touch.clientY
+            });
+            block.dispatchEvent(mouseEvent);
+        }, false)
+        vBlock.addEventListener("touchstart", (e)=>{
+            e.preventDefault();
+            let touch = e.touches[0];
+            let mouseEvent = new MouseEvent("mousedown", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            vBlock.dispatchEvent(mouseEvent);
+        });
+        vBlock.addEventListener("touchend", (e)=>{
+            let mouseEvent = new MouseEvent("mouseup", {});
+            vBlock.dispatchEvent(mouseEvent);
+        });
+        vBlock.addEventListener("touchmove", (e)=>{
+            let touch = e.touches[0];
+            let mouseEvent = new MouseEvent('mousemove', {
+              clientX: touch.clientX,
+              clientY: touch.clientY
+            });
+            vBlock.dispatchEvent(mouseEvent);
+        }, false)
         window.addEventListener('mouseup', (event)=>{
             if(this.state.volumeClicked){
                 this.setState({
@@ -75,7 +129,19 @@ class Player extends React.Component{
             if(this.state.volumeClicked){
                 this.changeVolume(event, null)
             }
-        })
+        });
+        window.addEventListener('touchmove', (event)=>{
+            let touch = e.touches[0];
+            let mouseEvent = new MouseEvent('mousemove', {
+              clientX: touch.clientX,
+              clientY: touch.clientY
+            });
+            window.dispatchEvent(mouseEvent);
+        }, false);
+        window.addEventListener("touchend", (e)=>{
+            let mouseEvent = new MouseEvent("mouseup", {});
+            window.dispatchEvent(mouseEvent);
+        });
         var iframeElement = document.querySelector(`[name="${this.props.instance}-iframe"]`);
         widget1 = SC.Widget(iframeElement);
         this.state.player = widget1;
@@ -215,9 +281,18 @@ class Player extends React.Component{
         const fill = document.querySelector(".filledProgressBar");
         const handle = document.querySelector(".progressHandle");
         const background = document.querySelector(".progressBackground");
-        let value = (event.clientX - event.target.parentElement.offsetLeft) / event.target.offsetWidth
-        fill.style.width = `${value * background.offsetWidth}px`;
-        handle.style.left = `${value * background.offsetWidth}px`;
+        let value = (event.clientX - event.target.parentElement.offsetLeft) / event.target.offsetWidth;
+        if(value < 0){
+            value = 0;
+        }else if(value > this.state.duration){
+            value = this.state.duration
+        }
+        let width = value * background.offsetWidth;
+        if(width > background.offsetWidth){
+            width = background.offsetWidth;
+        }
+        fill.style.width = `${width}px`;
+        handle.style.left = `${width}px`;
         this.setState({
             durationLeft: value * this.state.duration
         });
@@ -335,7 +410,7 @@ class Player extends React.Component{
                 <div name={`${this.props.instance}-timeLeft`} className='timeLeft playInput'><p>{this.state.timeLeft}</p></div>
                 <div className='progressWrapper'>
                     <div name={`${this.props.instance}-tracker`} id='tracker' className='tracker invis'>{this.state.tracker}</div>
-                    <div onMouseDown={this.clicked.bind(this)} onMouseUp={this.clicked.bind(this)} onMouseEnter={this.trackerShow} onMouseLeave={this.trackerShow} className='block'></div>
+                    <div onMouseEnter={this.trackerShow} onMouseLeave={this.trackerShow} className='block'></div>
                     <div className='progressBackground'></div>
                     <div className='filledProgressBar'></div>
                     <div className='progressHandle'></div>
@@ -343,7 +418,7 @@ class Player extends React.Component{
                 <div name={`${this.props.instance}-totaltime`} className='totaltime playInput'><p>{this.state.totalTime}</p></div>
                 <div className='volume' onMouseEnter={this.openVolume} onMouseLeave={this.openVolume} >
                     <div className='volumeSlider hid'>
-                        <div onMouseDown={this.clickedVolume.bind(this)} onMouseUp={this.clickedVolume.bind(this)} className='volumeBlock'></div>
+                        <div className='volumeBlock'></div>
                         <div className='volumeSliderBackground'></div>
                         <div className='volumeSliderProgress'></div>
                         <div className='volumeSliderHandle'></div>

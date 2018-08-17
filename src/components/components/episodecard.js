@@ -16,7 +16,7 @@ const EpisodeCard = (props)=>{
                 <h2 className='epiCardText epiCardTitle'>Episode {props.episode.number}: {props.title}</h2>
                 <p className='epiCardText epiCardDescription'>{props.episode.summary}</p>
                 <div className='epiButtonDiv'>
-                    <button onClick={play} className='epiButton play'>Play Episode</button><Link to={`/episodes/${props.episode.url}`} name='episode' className='epiButton info'>More Info</Link>
+                    <button onClick={play} className='epiButton play'>Play</button><Link to={`/episodes/${props.episode.url}`} name='episode' className='epiButton info'>More Info</Link>
                 </div>
             </div>
         </div>

@@ -121,12 +121,9 @@ router.put('/changepassword', Auth, (req, res)=>{
 })
 
 router.post('/postnewepisode', Auth, upload.single("image"), (req, res)=>{
-    console.log(req.body);
     let file = `/images/uploads/${req.file.filename}`;
     let episode = new Episode;
-    let resources = [];
     let url = req.body.title.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ").split(" ").join("-");
-    console.log(url);
     episode.title = req.body.title;
     episode.url = url;
     episode.description = req.body.description;
@@ -136,7 +133,7 @@ router.post('/postnewepisode', Auth, upload.single("image"), (req, res)=>{
     episode.date = getDate();
     episode.length = req.body.length;
     episode.image = file;
-    episode.resources = resources;
+    episode.resources = JSON.parse(req.body.resources);
     episode.number = req.body.number;
     episode.user = req.body.userid;
     episode.save((err, epi)=>{
@@ -162,8 +159,9 @@ router.post('/updateepisode', Auth, (req, res)=>{
         epi.rawsoundcloud = req.body.rawsoundcloud;
         epi.date = req.body.date;
         epi.length = req.body.length;
-        epi.resources = req.body.resources;
+        epi.resources = JSON.parse(req.body.resources);
         epi.number = req.body.number;
+        console.log(epi)
         epi.save((err, ep)=>{
             if(err){return err};
             res.json(ep)
@@ -184,7 +182,7 @@ router.post('/updateepisodeimage', Auth, upload.single("image"), (req, res)=>{
         epi.rawsoundcloud = req.body.rawsoundcloud;
         epi.date = req.body.date;
         epi.length = req.body.length;
-        epi.resources = req.body.resources;
+        epi.resources = JSON.parse(req.body.resources);
         epi.number = req.body.number;
         epi.image = file;
         epi.save((err, ep)=>{

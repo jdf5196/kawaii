@@ -16,7 +16,8 @@ class Episode extends React.Component{
 				date: "",
 				length: "",
 				image: "",
-				resources: []
+				resources: [],
+				keywords: []
 			}
 		}
 		this.play = this.play.bind(this);
@@ -30,6 +31,7 @@ class Episode extends React.Component{
 				url:'/getepisode',
 				data: {url: this.props.match.params.episodeTitle},
 				success: (data)=>{
+					console.log(data)
 					this.setState({
 						podcast: data
 					})
@@ -46,6 +48,16 @@ class Episode extends React.Component{
 		elm.innerHTML = desc;
 	}
 	render(){
+		let resources = this.state.podcast.resources.map((r, i)=>{
+				return(
+					<div key={i}>
+						<a href={r.link}><p>{r.title}</p></a>
+						<div>
+							<p>{r.description}</p>
+						</div>
+					</div>
+				)
+			})
 		return(
 			<div className='wrapper'>
 				<div className='homeHeader' style={{backgroundImage:`linear-gradient(rgba(52, 0, 101, 0.4), rgba(0, 0, 0, 0.4)), url(${this.state.podcast.image})`}}>
@@ -66,6 +78,10 @@ class Episode extends React.Component{
 					<h1>{this.state.podcast.title}</h1>
 					<div id='description' className='episodeDescription'>
 					</div>
+				</div>
+				<div className='resourceWrapper'>
+					<h2>Resources</h2>
+					{resources}
 				</div>
 			</div>
 		)

@@ -30,8 +30,12 @@ class Edit extends React.Component{
         this.expandEpisode = this.expandEpisode.bind(this);
         this.deleteInput = this.deleteInput.bind(this);
         this.addInput = this.addInput.bind(this);
+        this.changeKeyword = this.changeKeyword.bind(this);
+        this.addKeyword = this.addKeyword.bind(this);
+        this.deleteKeyword = this.deleteKeyword.bind(this);
         this.changeInput = this.changeInput.bind(this);
         this.changePassword = this.changePassword.bind(this);
+        this.changeOldInput = this.changeOldInput.bind(this);
     }
     componentWillMount(){
         if(Auth.isLoggedIn()){
@@ -51,9 +55,11 @@ class Edit extends React.Component{
         if(Auth.isLoggedIn()){
             return (
                 <div className='logout logDiv'>
-                    <button onClick={this.logout.bind(this, event)} className='logoutBtn'>Log Out</button>
+                    <button onClick={this.logout.bind(this)} className='logoutBtn'>Log Out</button>
                     <form autoComplete="off" id='changePw'>
                         <p>Change Password</p>
+                        <input type='password' style={{display:'none'}} />
+                        <input type='password' style={{display:'none'}} />
                         <input autoComplete="off" id='currentPw' type='password' required placeholder='Current Password' />
                         <input autoComplete="off" id='newPw' type='password' required placeholder='New Password' />
                         <button className='changeBtn' type='submit' onClick={this.changePassword.bind(this)}>Change Password</button>                    
@@ -93,6 +99,7 @@ class Edit extends React.Component{
                         <input id='soundcloud' className='newEpisodeInput' type='text' placeholder='SoundCloud Link' />
                         <textarea id='summary' className='newEpisodeSummary' type='text' placeholder='Short Summary'></textarea>
                         <div id='description' className='newEpisodeText' type='text' placeholder='Description'></div>
+                        <textarea id='newKeywords' className='newKeywords' placeholder='Keywords separated by comma'></textarea>
                         {this.state.newResources.map((r, i)=>{
                             return(
                                 <div className='resource' key={i}>
@@ -104,7 +111,7 @@ class Edit extends React.Component{
                                 </div>
                             )
                         })}
-                        <div className='resourceBtn add' onClick={()=>{this.addInput()}}>Add +</div>
+                        <div className='resourceBtn add' onClick={()=>{this.addInput()}}>Add Resource +</div>
                         <input onClick={this.submitNewEpisode} name='image' className='newEpisodeInput' type='submit' value='submit' />
                     </form>
                 </div>
@@ -113,12 +120,31 @@ class Edit extends React.Component{
             return
         }
     }
+    changeKeyword(e, i){
+        let keywords = this.state.newKeywords;
+        keywords[i] = e.target.value;
+        this.setState({
+            newKeywords: keywords
+        })
+    }
+    deleteKeyword(i){
+        let arr = [...this.state.newKeywords.slice(0, i), ...this.state.newKeywords.slice(i +1, this.state.newKeywords.length)];
+        this.setState({
+            newKeywords: arr
+        })
+    }
+    addKeyword(){
+        let arr = [...this.state.newKeywords, ""];
+        this.setState({
+            newKeywords: arr
+        })
+    }
     changeInput(e, i, type){
         let resources = this.state.newResources;
         resources[i][type] = e.target.value;
         this.setState({
             newResources: resources
-        })
+        });
     }
     deleteInput(i){
         let arr = [...this.state.newResources.slice(0, i), ...this.state.newResources.slice(i +1, this.state.newResources.length)];
@@ -127,7 +153,7 @@ class Edit extends React.Component{
         })
     }
     addInput(){
-        let arr = [...this.state.newResources, {description: "", link: ""}];
+        let arr = [...this.state.newResources, {title: "", description: "", link: ""}];
         this.setState({
             newResources: arr
         })
@@ -222,7 +248,18 @@ class Edit extends React.Component{
     submitNewEpisode(e){
         e.preventDefault();
         let form = new FormData();
-        let resources = [];
+        let resources = JSON.stringify(this.state.newResources);
+        let keywords = document.getElementById('newKeywords').value.split(",");
+        for(let i in keywords){
+            let str = keywords[i];
+            if(str.charAt(0) === " "){
+                str = str.substr(1);
+            }
+            str.toLowerCase();
+            keywords[i] = str;
+        }
+        keywords = JSON.stringify(keywords);
+        console.log(keywords);
         let link = document.getElementById("soundcloud").value;
         let nlink = link.split('src="')[1].slice(0, link.split('src="')[1].length - 11);
         form.append("image", document.getElementById("image").files[0]);
@@ -233,6 +270,7 @@ class Edit extends React.Component{
         form.append("soundcloud", nlink);
         form.append("rawsoundcloud", link);
         form.append("length", document.getElementById("length").value);
+        form.append("keywords", keywords);
         form.append("resources", resources);
         form.append("userid", Auth.currentUserID());
         console.log(form);
@@ -246,7 +284,9 @@ class Edit extends React.Component{
                 let episodes = this.state.episodes;
                 episodes.push(data);
                 this.setState({
-                    episodes:episodes
+                    episodes:episodes,
+                    newKeywords:["", ""],
+                    newResources: [{description: "", link: "", title: ""}, {description: "", link:"", title: ""}]
                 });
                 document.getElementById("image").value = "";
                 document.getElementById("number").value = "";
@@ -292,13 +332,13 @@ class Edit extends React.Component{
             data: data,
             success: (data)=>{
                 Auth.saveToken(data.token);
-                this.setState(this.state);
+                this.getAllEpisodes();
                 Toastr.options.positionClass = 'toast-top-center';
                 Toastr.success("You Are Logged In");
-                this.createEditor("description", "new", null);
-                document.getElementById("username").value = "";
-                document.getElementById("pw").value = "";
-                this.showQuills();
+                setTimeout(()=>{
+                    this.createEditor("description", "new", null);
+                    this.showQuills();
+                }, 100)
             },
             error: (data)=>{
 				Toastr.options.positionClass = 'toast-top-center';
@@ -353,7 +393,7 @@ class Edit extends React.Component{
                 let image = ()=>{
                     if(epi.image !== ""){
                         return(<div><img className='newEpisodeImage' src={epi.image} />
-                                <button onClick={this.deleteImage.bind(this, event, index)} className='deleteImage'>Delete Image</button></div>
+                                <div onClick={this.deleteImage.bind(this, event, index)} className='deleteImage'>Delete Image</div></div>
                         )
                     }else{
                         return(<input id={"e-"+epi._id+"-image"} className='newEpisodeInput' type='file' name="Episode Image" />)
@@ -363,13 +403,14 @@ class Edit extends React.Component{
                     return(
                         <div>
                             <p>Resource {i+1}</p>
-                            <input onChange={(e)=>{this.changeInput(e, i, 'title')}} value={r.title} className='newEpisodeInput' type='text' placeholder='Resource Title' />
-                            <input onChange={(e)=>{this.changeInput(e, i, 'description')}} value={r.description} className='newEpisodeInput' type='text' placeholder='Resource Description' />
-                            <input onChange={(e)=>{this.changeInput(e, i, 'link')}} className='newEpisodeInput' value={r.link} type='text' placeholder='Resource Link' />
-                            <div className='resourceBtn delete' onClick={()=>{this.deleteInput(i)}}>x</div>
+                            <input onChange={(e)=>{this.changeOldInput(e, index, i, 'title')}} value={r.title} className='newEpisodeInput' type='text' placeholder='Resource Title' />
+                            <input onChange={(e)=>{this.changeOldInput(e, index, i, 'description')}} value={r.description} className='newEpisodeInput' type='text' placeholder='Resource Description' />
+                            <input onChange={(e)=>{this.changeOldInput(e, index, i, 'link')}} className='newEpisodeInput' value={r.link} type='text' placeholder='Resource Link' />
+                            <div className='resourceBtn delete' onClick={()=>{this.deleteOldInput(index, i)}}>Delete</div>
                         </div>
                     )
-                })
+                });
+                let keywords = epi.keywords.join(", ");
                 return (<div className='newEpisodeWrapper'>
                             <button onClick={(e)=>{this.expandEpisode(e)}} className='collapsible'>{epi.title}</button>
                             <form id={epi.title+'-form'} key={epi.title} className='newEpisodeForm hid'>
@@ -380,10 +421,12 @@ class Edit extends React.Component{
                                 <input id={"e-"+epi._id+"-soundcloudInput"} className='newEpisodeInput' type='text' defaultValue={epi.rawsoundcloud} placeholder='SoundCloud Link' />
                                 <input id={"e-"+epi._id+"-urlInput"} className='newEpisodeInput' type='text' defaultValue={epi.url} placeholder='URL Text' />
                                 {image()}
+                                <textarea id={"e-"+epi._id+"-keywordInput"} className='newKeywords' type='text' defaultValue={keywords} placeholder='Keywords'></textarea>
                                 {resources}
+                                <div className='resourceBtn add' onClick={()=>{this.addOldInput(index)}}>Add Resource +</div>
                                 <textarea id={"e-"+epi._id+"-summaryInput"} className='newEpisodeSummary' type='text' defaultValue={epi.summary} placeholder='Short Summary'></textarea>
                                 <div id={"e-"+epi._id + "-description"} className='newEpisodeText' type='text' placeholder='Description'></div>
-                                <button onClick={this.updateEpisode.bind(this, event, index, epi._id)} className='newEpisodeInput'>Save</button>
+                                <div onClick={this.updateEpisode.bind(this, event, index, epi._id)} className='newEpisodeInput'>Save</div>
                                 <button onClick={this.confirmDelete.bind(this, epi._id, index)} className='newEpisodeInput'>Delete</button>
                             </form>
                         </div>
@@ -394,13 +437,42 @@ class Edit extends React.Component{
             return
         }
     }
+    changeOldInput(e, eIndex, rIndex, type){
+        let episode = this.state.episodes[eIndex];
+        let episodes = this.state.episodes;
+        episode.resources[rIndex][type] = e.target.value;
+        episodes[eIndex] = episode;
+        this.setState({
+            episodes: episodes
+        })
+    }
+    addOldInput(index){
+        let episode = this.state.episodes[index];
+        let episodes = this.state.episodes;
+        let resources = [...episode.resources, {title: "", description: "", link: ""}];
+        episode.resources = resources;
+        episodes[index] = episode;
+        this.setState({
+            episodes: episodes
+        })
+    }
+    deleteOldInput(eIndex, rIndex){
+        let episode = this.state.episodes[eIndex];
+        let episodes = this.state.episodes;
+        let resources = episode.resources;
+        let arr = [...resources.slice(0, rIndex), ...resources.slice(rIndex +1, resources.length)];
+        episode.resources = arr;
+        episodes[eIndex] = episode;
+        this.setState({
+            episodes: episodes
+        });
+    }
     expandEpisode(e){
         e.persist();
         console.log(e.target.nextElementSibling);
         e.target.nextElementSibling.classList.toggle('hid')
     }
     deleteImage(e, i){
-        e.preventDefault();
         let episodes = this.state.episodes;
         let ep = this.state.episodes[i];
         ep.image = "";
@@ -409,19 +481,28 @@ class Edit extends React.Component{
     
     }
     showQuills(){
+        console.log(this.state.episodes.length);
         if(this.state.episodes.length > 0){
             for(let i in this.state.episodes){
-                console.log(this.state.episodes[i].descriptionContent);
                 this.createEditor("e-"+this.state.episodes[i]._id + "-description", "old", this.state.episodes[i].description);
             }
         }
     }
     updateEpisode(e, i, id){
-        e.stopImmediatePropagation()
-        e.preventDefault();
+        //e.preventDefault();
         let form = new FormData();
         let data;
-        let resources = [];
+        let resources = JSON.stringify(this.state.episodes[i].resources);
+        let keywords = document.getElementById("e-"+id+"-keywordInput").value.split(",");
+        for(let i in keywords){
+            let str = keywords[i];
+            if(str.charAt(0) === " "){
+                str = str.substr(1);
+            }
+            str.toLowerCase();
+            keywords[i] = str;
+        }
+        keywords = JSON.stringify(keywords);
         let link = document.getElementById("e-"+id+"-soundcloudInput").value;
         let nlink = link.split('src="')[1].slice(0, link.split('src="')[1].length - 11);
         let url;
@@ -438,6 +519,7 @@ class Edit extends React.Component{
             form.append("rawsoundcloud", link);
             form.append("length", document.getElementById("e-"+id+"-lengthInput").value);
             form.append("resources", resources);
+            form.append("keywords", keywords);
             url = "/updateepisodeimage";
             data = form;
             $.ajax({
@@ -449,6 +531,7 @@ class Edit extends React.Component{
                 success: (data)=>{
                     let episodes = this.state.episodes;
                     episodes[i] = data;
+                    console.log(data);
                     Toastr.options.positionClass = 'toast-top-center';
                     Toastr.success(`Episode ${data.title} has been updated.`);
                     this.setState({episodes:episodes});
@@ -474,7 +557,8 @@ class Edit extends React.Component{
                 soundcloud: nlink,
                 rawsoundcloud: link,
                 length: document.getElementById("e-"+id+"-lengthInput").value,
-                resources: resources
+                resources: resources,
+                keywords: keywords
             };
             $.ajax({
                 type:"POST",
@@ -483,6 +567,7 @@ class Edit extends React.Component{
                 success: (data)=>{
                     let episodes = this.state.episodes;
                     episodes[i] = data;
+                    console.log(data)
                     Toastr.options.positionClass = 'toast-top-center';
                     Toastr.success(`Episode ${data.title} has been updated.`);
                     this.setState({episodes:episodes});

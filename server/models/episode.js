@@ -15,10 +15,11 @@ const EpisodeSchema = new mongoose.Schema({
     image: String,
     user: String,
     resources: [{
-        name: String,
+        title: String,
         link: String,
         description: String
-    }]
+    }],
+    keywords: [String]
 });
 
 mongoose.model('Episode', EpisodeSchema);
