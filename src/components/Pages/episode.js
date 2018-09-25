@@ -64,7 +64,7 @@ class Episode extends React.Component{
 				let guest;
 				if(g.link){
 					guest = <div key={i}>
-								<a href={g.link}><p>{g.name}</p></a>
+								<a target="_blank" href={g.link}><p>{g.name}</p></a>
 							</div>
 				}else{
 					guest = <div key={i}>
