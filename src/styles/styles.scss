@@ -885,7 +885,7 @@ input[type=range] {
 }
 .resourceWrapper{
     margin-bottom: 100px;
-    max-width: 80%;
+    max-width: 60%;
     margin-left: auto;
     margin-right: auto;
     a{
@@ -1157,7 +1157,10 @@ input[type=range] {
             }
         }
       }
-      .descriptionWrapper{
+    .descriptionWrapper{
+        max-width:80% !important;
+    }
+    .resourceWrapper{
         max-width:80% !important;
     }
   }
