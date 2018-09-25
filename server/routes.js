@@ -78,7 +78,6 @@ router.post('/register', (req, res)=>{
                 html: message
             }, (err)=>{
                 if(err){
-                    console.log(err);
                     res.status(500).send('Failed to send');
                 }
                 transporter.close();
@@ -88,7 +87,6 @@ router.post('/register', (req, res)=>{
     });
 });
 router.post('/login', (req, res)=>{
-    console.log(req.body.username);
     if(!req.body.username || !req.body.password){
         return res.status(400).json({message: "Please fill out all fields."});
     }
@@ -133,7 +131,9 @@ router.post('/postnewepisode', Auth, upload.single("image"), (req, res)=>{
     episode.date = getDate();
     episode.length = req.body.length;
     episode.image = file;
+    //episode.guests = JSON.parse(req.body.guests);
     episode.resources = JSON.parse(req.body.resources);
+    episode.keywords = JSON.parse(req.body.keywords);
     episode.number = req.body.number;
     episode.user = req.body.userid;
     episode.save((err, epi)=>{
@@ -159,9 +159,10 @@ router.post('/updateepisode', Auth, (req, res)=>{
         epi.rawsoundcloud = req.body.rawsoundcloud;
         epi.date = req.body.date;
         epi.length = req.body.length;
+        epi.guests = JSON.parse(req.body.guests);
         epi.resources = JSON.parse(req.body.resources);
+        epi.keywords = JSON.parse(req.body.keywords);
         epi.number = req.body.number;
-        console.log(epi)
         epi.save((err, ep)=>{
             if(err){return err};
             res.json(ep)
@@ -172,7 +173,6 @@ router.post('/updateepisode', Auth, (req, res)=>{
 router.post('/updateepisodeimage', Auth, upload.single("image"), (req, res)=>{
     let file = `/images/uploads/${req.file.filename}`;
     Episode.findOne({_id: req.body.id}, (err, epi)=>{
-        console.log(epi);
         if(err){return err}
         epi.title = req.body.title;
         epi.url = req.body.url;
@@ -182,6 +182,7 @@ router.post('/updateepisodeimage', Auth, upload.single("image"), (req, res)=>{
         epi.rawsoundcloud = req.body.rawsoundcloud;
         epi.date = req.body.date;
         epi.length = req.body.length;
+        epi.guests = JSON.parse(req.body.guests);
         epi.resources = JSON.parse(req.body.resources);
         epi.number = req.body.number;
         epi.image = file;
@@ -244,7 +245,6 @@ router.put('/getfiveepisodes', (req,res)=>{
 router.put('/getepisode', (req,res)=>{
     Episode.findOne({url:req.body.url}, (err, epi)=>{
         if(err){return err}
-        console.log(epi)
         res.json(epi)
     })
 })
@@ -259,7 +259,6 @@ router.post('/sendemail', (req, res)=>{
         html: req.body.message
     }, (err)=>{
         if(err){
-            console.log(err);
             res.status(500).send('Failed to send');
         }
         transporter.close();

@@ -2,6 +2,9 @@
 $c1: #005867;
 $l1: #fca1fd;
 $l2: #58fb58;
+$b1: #161c23;
+$b2: #2c3641;
+$f1: #b5b5b5;
 
 // General
 html, body{
@@ -9,7 +12,8 @@ html, body{
 }
 body{
     margin:0;
-    background-color: #e7f4ff;
+    background-color: $b1;
+    color: $f1;
     font-family: Montserrat,sans-serif;
 }
 .wrapper{
@@ -140,6 +144,15 @@ body{
 }
 .epiContainer{
     margin-bottom:100px;
+    .addBtn{
+        cursor: pointer;
+        position: absolute;
+        margin-left: calc(50% - 64px);
+        margin-top: -34px;
+        &:hover{
+            color:$c1;
+        }
+    }
 }
 .recent{
     margin-top:50px;
@@ -181,10 +194,10 @@ body{
     }
     hr{
         width: 125px;
-        height: 3px;
+        height: 4px;
         background: $c1;
-        border-radius: 3px;
-        border-color: $c1;
+        border-radius: 4px;
+        border:none;
         margin-bottom: 50px;
         margin-top: 50px;
 
@@ -505,6 +518,12 @@ input[type=range] {
     text-decoration: none;
     margin-left: auto;
     margin-right: auto;
+    border-radius: 12px;
+    border:solid 1px $c1;
+    transition: border-color 0.5s;
+    &:hover{
+        border-color:$f1;
+    }
   }
 
   //Episode Card
@@ -533,7 +552,16 @@ input[type=range] {
             width: calc(100% - 250px);
             height: 100%;
             position:relative;
-            background-color:#f3f3f3;
+            background-color:$b2;
+            .editBtn{
+                cursor: pointer;
+                position: absolute;
+                top: -12px;
+                right: 10px;
+                &:hover{
+                    color:$c1;
+                }
+            }
             .epiCardText{
                 padding-left:25px;
                 padding-right:25px;
@@ -556,8 +584,8 @@ input[type=range] {
                     margin-right:10px;
                     height:36px;
                     width:35%;
-                    background-color:#cf54fc;
                     border:solid 1px $c1;
+                    border-radius: 12px;
                     color:white;
                     cursor:pointer;
                     &:hover{
@@ -568,7 +596,7 @@ input[type=range] {
                     }
                 }
                 .play{
-                    background-color:#cf54fc;
+                    background-color:$c1;
                     float: left;
                     margin-left: 35px;
                 }
@@ -591,6 +619,12 @@ input[type=range] {
     h1{
         text-align:center;
     }
+    hr{
+        background:$c1;
+        height: 3px;
+        border: none;
+        border-radius: 3px;
+    }
 }
 
   .episodeCard:before{
@@ -600,9 +634,9 @@ input[type=range] {
     top: 0px;
     right: 0px;
     bottom: 0px;
-    -moz-box-shadow: 1px 1px 20px 3px rgba(125, 125, 125, 0.4);
-    -webkit-box-shadow: 1px 1px 20px 3px rgba(125, 125, 125, 0.4);
-    box-shadow: 1px 1px 20px 3px rgba(125, 125, 125, 0.4);
+    -moz-box-shadow: 1px 1px 20px 3px #000;
+    -webkit-box-shadow: 1px 1px 20px 3px #000;
+    box-shadow: 1px 1px 20px 3px #000;
     pointer-events: none;
     border-radius:5px;
   }
@@ -691,7 +725,7 @@ input[type=range] {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    background: #ffffff;
+    background: $b2;
     padding-top: 25px;
     margin-top: 50px;
     padding-bottom: 25px;
@@ -710,7 +744,7 @@ input[type=range] {
         img{
             width: 160px;
             border-style: double;
-            border-color: #ced7e2;
+            border-color: $b1;
             border-radius: 50% 50% 50% 50%;
         }
     }
@@ -719,7 +753,7 @@ input[type=range] {
     }
     h3{
         text-align: center;
-        color: #003ba9;
+        color: $c1;
         font-size: 17px;
         font-style: italic;
     }
@@ -740,16 +774,17 @@ input[type=range] {
         margin-top:50px;
         text-align:left;
         .contactInput{
+            color:$f1;
             border-left:none;
             border-right:none;
             border-top:none;
             border-radius:0px;
-            border-bottom: solid 1px #333;
+            border-bottom: solid 1px $f1;
             min-width:100%;
             margin-bottom:30px;
             font-size:16px;
             box-sizing: border-box;
-            background: #e7f4ff;
+            background: $b1;
             box-shadow:none !important;
             &:focus{
                 outline:none;
@@ -814,7 +849,7 @@ input[type=range] {
             height:35px;
             font-size:15px;
             cursor:pointer;
-            border-radius:3px;
+            border-radius:12px;
             transition: background .5s, color .5s;
             &:hover{
                 background:rgba(0,180,193,0.5);
@@ -844,15 +879,23 @@ input[type=range] {
     h1{
         text-align:center;
     }
+    .epiDateLength{
+        text-align:center;
+    }
 }
 .resourceWrapper{
     margin-bottom: 100px;
     max-width: 60%;
     margin-left: auto;
     margin-right: auto;
-    h2{
-        text-align:center;
+    a{
+        color: #005867;
+        font-weight: bold;
+        font-size: 20px;
     }
+}
+.guestsWrapper{
+    margin-bottom: 50px !important;
 }
 .mainLogo{
     transform: scale(1.25);
@@ -990,8 +1033,94 @@ input[type=range] {
     outline:none;
     font-size:15px;
 }
+//Episode Editor
+.episodeEditor{
+    position: fixed;
+    height: 50%;
+    width: 90%;
+    max-width:750px;
+    top: 75px;
+    background: white;
+    overflow:scroll;
+    border-radius:10px;
+    z-index:9999;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    .editorClose{
+        text-align: right;
+        margin-top: 5px;
+        margin-right: 10px;
+        cursor:pointer;
+        &:hover{
+            color:$c1;
+        }
+    }
+    h2{
+        text-align:center;
+    }
+    .editorInputContainer{
+        width: 60%;
+        margin-left: auto;
+        margin-right: auto;
+        .episodeInput{
+            width: 100%;
+            font-size: 16px;
+            line-height: 16px;
+            padding: 5px;
+        }
+        .epiText{
+            height: 80px;
+        }
+        .inputDiv{
+            margin-bottom:40px;
+            .epiInputLabel{
+                position:absolute;
+                margin-top: -27px;
+                margin-left: 5px;
+                transition: all 0.3s;
+            }
+            .epiTextLabel{
+                margin-top:-90px !important;
+            }
+            .episodeInput:not(:placeholder-shown) ~ .epiInputLabel{
+                margin-top:-55px;
+                margin-left:4px;
+                font-size:14px;
+            }
+            .episodeInput:focus ~ .epiInputLabel{
+                color:red;
+                margin-top:-55px;
+                margin-left:4px;
+                font-size:14px;
+            }
+            .epiText:not(:placeholder-shown) ~ .epiTextLabel{
+                margin-top:-120px !important;
+            }
+            .epiText:focus ~ .epiTextLabel{
+                color: red;
+                margin-top:-120px !important
+            }
+        }
+    }
+    .saveButton{
+        width:100px;
+        height:25px;
+        background:$l2;
+        text-align:center;
+        position:relative;
+        margin-left:auto;
+        margin-right:auto;
+    }
+}
+.episodeEditor.closed{
+    display:none;
+}
+.episodeEditor.open{
+    display:block;
+}
 
-  @media (max-width: 800px){
+  @media (max-width: 810px){
       .epiList{
           width:75%;
       }
@@ -1003,10 +1132,11 @@ input[type=range] {
       }
       .episodeCard{
         height: auto;
+        max-width:475px;
         .epiCardImage{
             float:none;
             width:100%;
-            height:70%;
+            height:300px;
             img{
                 border-radius:0px;
             }

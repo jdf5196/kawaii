@@ -3,9 +3,7 @@ const webpack = require('webpack');
 const CompressionPlugin = require("compression-webpack-plugin");
 
 module.exports = {
-	entry: {
-		src: './src/index.js'
-	},
+	entry: ["babel-polyfill", "./src/index.js"],
 	output: {
 		path: path.resolve(__dirname, 'build'),
 		filename: 'bundle.js',

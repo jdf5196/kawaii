@@ -3,6 +3,7 @@ import { Link, Switch, Route } from 'react-router-dom';
 import Data from '../../../data.js';
 import EpisodeList from '../components/epilist.js';
 import Logo from '../components/logo.js';
+import EpisodeEditor from '../components/episodeEditor';
 import EventEmitter from '../events/events.js';
 
 class Episodes extends React.Component{
@@ -40,6 +41,7 @@ class Episodes extends React.Component{
 					<hr />
 				</div>
 				<EpisodeList episodes={this.state.podcasts} />
+				<EpisodeEditor />
 			</div>
 		)
 	}

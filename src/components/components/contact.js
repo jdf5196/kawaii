@@ -32,13 +32,13 @@ const Contact = (props)=>{
             <h1>Send us a Message</h1>
             <hr />
             <form className='contactForm' name='Contact Form' onSubmit={(event)=>{submitForm(event)}}>
-                <input id='name' class='contactInput inputText' type='text' placeholder=' ' required />
+                <input id='name' className='contactInput inputText' type='text' placeholder=' ' required />
                 <p className='label nameLabel'>Name *</p>
-                <input id='email' class='contactInput inputText' type='email' placeholder=' ' required />
-                <p class='label emailLabel'>Email Address *</p>
-                <textarea id='message' class='contactInput message' placeholder=' ' required></textarea>
-                <p class='label messageLabel'>Message *</p>
-                <button type='submit' class='submitButton'> Send </button>
+                <input id='email' className='contactInput inputText' type='email' placeholder=' ' required />
+                <p className='label emailLabel'>Email Address *</p>
+                <textarea id='message' className='contactInput message' placeholder=' ' required></textarea>
+                <p className='label messageLabel'>Message *</p>
+                <button type='submit' className='submitButton'> Send </button>
             </form>
         </div>
     )

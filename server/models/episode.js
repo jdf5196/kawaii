@@ -14,6 +14,7 @@ const EpisodeSchema = new mongoose.Schema({
     length: String,
     image: String,
     user: String,
+    guests: [{name: String, link: String}],
     resources: [{
         title: String,
         link: String,

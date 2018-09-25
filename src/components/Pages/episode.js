@@ -51,13 +51,29 @@ class Episode extends React.Component{
 		let resources = this.state.podcast.resources.map((r, i)=>{
 				return(
 					<div key={i}>
-						<a href={r.link}><p>{r.title}</p></a>
+						<a target="_blank" href={r.link}><p>{r.title}</p></a>
 						<div>
 							<p>{r.description}</p>
 						</div>
 					</div>
 				)
 			})
+		let guests;
+		if(this.state.podcast.guests){
+			guests = this.state.podcast.guests.map((g, i)=>{
+				let guest;
+				if(g.link){
+					guest = <div key={i}>
+								<a href={g.link}><p>{g.name}</p></a>
+							</div>
+				}else{
+					guest = <div key={i}>
+								<p>{g.name}</p>
+							</div>
+				}
+				return guest
+			})
+		}
 		return(
 			<div className='wrapper'>
 				<div className='homeHeader' style={{backgroundImage:`linear-gradient(rgba(52, 0, 101, 0.4), rgba(0, 0, 0, 0.4)), url(${this.state.podcast.image})`}}>
@@ -76,11 +92,16 @@ class Episode extends React.Component{
 				</div>
 				<div className='descriptionWrapper'>
 					<h1>{this.state.podcast.title}</h1>
+					<p className='epiDateLength'>{this.state.podcast.date} | {this.state.podcast.length}</p>
 					<div id='description' className='episodeDescription'>
 					</div>
 				</div>
+				<div className='resourceWrapper guestsWrapper'>
+					<h2>Special Guests</h2>
+					{guests}
+				</div>
 				<div className='resourceWrapper'>
-					<h2>Resources</h2>
+					<h2>Topics & Music</h2>
 					{resources}
 				</div>
 			</div>

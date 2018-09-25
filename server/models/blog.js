@@ -7,7 +7,8 @@ const BlogSchema = new mongoose.Schema({
     html: String,
     date: String,
     user: Object,
-    url: String
+    url: String,
+    keywords: [String]
 });
 
 mongoose.model('Blog', BlogSchema);

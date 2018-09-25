@@ -6,7 +6,10 @@ const UserSchema = new mongoose.Schema({
     name: {type:String, lowercase: true, unique: true},
     email: {type:String},
     blogs: [String],
-    episodes: [String],
+    episodes: [{title: String, number: Number, url: String, date: String}],
+    bio: String,
+    links: [{title: String, url: String}],
+    image: String,
     hash: String,
     salt: String
 });

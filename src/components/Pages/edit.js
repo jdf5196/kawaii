@@ -36,6 +36,9 @@ class Edit extends React.Component{
         this.changeInput = this.changeInput.bind(this);
         this.changePassword = this.changePassword.bind(this);
         this.changeOldInput = this.changeOldInput.bind(this);
+        this.addGuest = this.addGuest.bind(this);
+        this.deleteGuest = this.deleteGuest.bind(this);
+        this.changeGuestInput = this.changeGuestInput.bind(this);
     }
     componentWillMount(){
         if(Auth.isLoggedIn()){
@@ -210,6 +213,12 @@ class Edit extends React.Component{
             url:'/getallepisodes',
             success: (data)=>{
                 if(data.length > 0){
+                    for(let i in data){
+                        if(data[i].guests.length === 0){
+                            console.log('umm');
+                            data[i].guests.push({name: "", link: ""})
+                        }
+                    }
                     this.setState({
                         episodes: data
                     });
@@ -259,7 +268,6 @@ class Edit extends React.Component{
             keywords[i] = str;
         }
         keywords = JSON.stringify(keywords);
-        console.log(keywords);
         let link = document.getElementById("soundcloud").value;
         let nlink = link.split('src="')[1].slice(0, link.split('src="')[1].length - 11);
         form.append("image", document.getElementById("image").files[0]);
@@ -387,7 +395,6 @@ class Edit extends React.Component{
         }else{return}
     }
     showAllEpisodes(){
-        console.log(Auth.isLoggedIn());
         if(Auth.isLoggedIn() && this.state.episodes.length > 0){
             let episodes = this.state.episodes.map((epi, index)=>{
                 let image = ()=>{
@@ -410,6 +417,17 @@ class Edit extends React.Component{
                         </div>
                     )
                 });
+                let guests = epi.guests.map((r, i)=>{
+                    console.log(r.name);
+                    return(
+                        <div>
+                            <p>Guest {i+1}</p>
+                            <input onChange={(e)=>{this.changeGuestInput(e, index, i, 'name')}} value={r.name} className='newEpisodeInput' type='text' placeholder='Guest Name' />
+                            <input onChange={(e)=>{this.changeGuestInput(e, index, i, 'link')}} value={r.link} className='newEpisodeInput' type='text' placeholder='Guest Link' />
+                            <div className='resourceBtn delete' onClick={()=>{this.deleteGuest(index, i)}}>Delete</div>
+                        </div>
+                    )
+                });
                 let keywords = epi.keywords.join(", ");
                 return (<div className='newEpisodeWrapper'>
                             <button onClick={(e)=>{this.expandEpisode(e)}} className='collapsible'>{epi.title}</button>
@@ -420,6 +438,8 @@ class Edit extends React.Component{
                                 <input id={"e-"+epi._id+"-dateInput"} className='newEpisodeInput' type='text' defaultValue={epi.date} placeholder="Upload Date" />
                                 <input id={"e-"+epi._id+"-soundcloudInput"} className='newEpisodeInput' type='text' defaultValue={epi.rawsoundcloud} placeholder='SoundCloud Link' />
                                 <input id={"e-"+epi._id+"-urlInput"} className='newEpisodeInput' type='text' defaultValue={epi.url} placeholder='URL Text' />
+                                {guests}
+                                <div className='resourceBtn add' onClick={()=>{this.addGuest(index)}}>Add Guest +</div>
                                 {image()}
                                 <textarea id={"e-"+epi._id+"-keywordInput"} className='newKeywords' type='text' defaultValue={keywords} placeholder='Keywords'></textarea>
                                 {resources}
@@ -436,6 +456,36 @@ class Edit extends React.Component{
         }else{
             return
         }
+    }
+    addGuest(index){
+        let episode = this.state.episodes[index];
+        let episodes = this.state.episodes;
+        let guests = [...episode.guests, {name: "", link: ""}];
+        episode.guests = guests;
+        episodes[index] = episode;
+        this.setState({
+            episodes: episodes
+        })
+    }
+    deleteGuest(index, i){
+        let episode = this.state.episodes[index];
+        let episodes = this.state.episodes;
+        let guests = episode.guests;
+        let arr = [...guests.slice(0, i), ...guests.slice(i + 1, guests.length)];
+        episode.guests = arr;
+        episodes[index] = episode;
+        this.setState({
+            episodes: episodes
+        })
+    }
+    changeGuestInput(e, eIndex, gIndex, type){
+        let episode = this.state.episodes[eIndex];
+        let episodes = this.state.episodes;
+        episode.guests[gIndex][type] = e.target.value;
+        episodes[eIndex] = episode;
+        this.setState({
+            episodes: episodes
+        })
     }
     changeOldInput(e, eIndex, rIndex, type){
         let episode = this.state.episodes[eIndex];
@@ -493,6 +543,7 @@ class Edit extends React.Component{
         let form = new FormData();
         let data;
         let resources = JSON.stringify(this.state.episodes[i].resources);
+        let guests = JSON.stringify(this.state.episodes[i].guests);
         let keywords = document.getElementById("e-"+id+"-keywordInput").value.split(",");
         for(let i in keywords){
             let str = keywords[i];
@@ -519,6 +570,7 @@ class Edit extends React.Component{
             form.append("rawsoundcloud", link);
             form.append("length", document.getElementById("e-"+id+"-lengthInput").value);
             form.append("resources", resources);
+            form.append("guests", guests);
             form.append("keywords", keywords);
             url = "/updateepisodeimage";
             data = form;
@@ -558,8 +610,10 @@ class Edit extends React.Component{
                 rawsoundcloud: link,
                 length: document.getElementById("e-"+id+"-lengthInput").value,
                 resources: resources,
+                guests: guests,
                 keywords: keywords
             };
+            console.log(data);
             $.ajax({
                 type:"POST",
                 url:url,

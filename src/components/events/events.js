@@ -9,6 +9,11 @@ var EventEmitter = {
   subscribe: (event, callback)=>{
     if(!EventEmitter._events[event]){EventEmitter._events[event] = []};
     EventEmitter._events[event].push(callback);
+    return EventEmitter._events[event].length - 1;
+  },
+  destroy: (event, index)=>{
+    if(!EventEmitter._events[event]){return};
+    EventEmitter._events[event].splice(index, 1);
   }
 }
 

@@ -1,9 +1,7 @@
 import React from 'react';
-import { Link, Switch } from 'react-router-dom';
-import yourname from '../../images/yourname.jpg';
-import kawaii from '../../images/kawaii.png';
-import trash from '../../images/trash.png';
+import { Link } from 'react-router-dom';
 import EpisodeList from '../components/epilist.js';
+import EpisodeEditor from '../components/episodeEditor.js';
 import Logo from '../components/logo.js';
 import About from '../components/about.js';
 import Contact from '../components/contact.js';
@@ -19,17 +17,17 @@ class Home extends React.Component{
 		}
 		this.play = this.play.bind(this);
 		this.handleScroll = this.handleScroll.bind(this);
+		this.handleOffset = this.handleOffset.bind(this);
 	}
-	componentWillMount(){
-		window.addEventListener("scroll", (e)=>{
-			let offset = document.querySelector(".latestContents").offsetTop - window.pageYOffset - 25;
+	handleOffset(e){
+		let offset = document.querySelector(".latestContents").offsetTop - window.pageYOffset - 25;
 			if(window.location.pathname === "/"){
 				this.handleScroll(offset);
 			}
-		});
 	}
 	componentDidMount(){
 		window.scrollTo(0, 0);
+		window.addEventListener("scroll", this.handleOffset);
 			$.ajax({
 				type:"PUT",
 				url:'/getfiveepisodes',
@@ -47,6 +45,9 @@ class Home extends React.Component{
 			})
 		let offset = document.querySelector(".latestContents").offsetTop - window.pageYOffset;
 		this.handleScroll(offset);
+	}
+	componentWillUnmount(){
+		window.removeEventListener("scroll", this.handleOffset);
 	}
 	play(){
 		EventEmitter.dispatch('playerChange', {episode: this.state.latest});
@@ -89,7 +90,8 @@ class Home extends React.Component{
 					<EpisodeList episodes={this.state.podcasts} />
 					<Link className='allBtn' to='/episodes'>See all Episodes</Link>
 					<About />	
-					<Contact />			
+					<Contact />	
+					<EpisodeEditor />		
 				</div>
 			</div>
 		)

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Auth from '../events/auth.js';
+import EventEmitter from '../events/events.js';
 import EpisodeCard from './episodecard.js';
 
 const EpisodeList = (props)=>{
@@ -8,8 +9,19 @@ const EpisodeList = (props)=>{
                 <EpisodeCard episode={episode} title={episode.title} />
                </li>
     })
+    const openEditor = ()=>{
+        EventEmitter.dispatch('openEpisodeEditor', {type: "new"});
+    }
+    const add = ()=>{
+        if(Auth.isLoggedIn()){
+            return(
+                <p className='addBtn' onClick={()=>{openEditor()}}>Add Episode +</p>
+            )
+        }
+    }
     return(
         <div className='epiContainer'>
+            {add()}
             <ul className='epiList'>
                 {Episodes}
             </ul>
