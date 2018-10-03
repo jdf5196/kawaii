@@ -97,6 +97,19 @@ body{
 .shortSocial{
     margin-top:16px !important;
 }
+
+// Developer Footer
+.devWrapper{
+    color: white;
+    margin-bottom: 55px;
+    text-align: center;
+    margin-top: -40px;
+    font-size: 13px;
+    a{
+      color:$c1;
+      font-weight:bold;
+    }
+}
 // Home Page
 .homeHeader{
     height: calc(100vh - 50px);
@@ -302,7 +315,7 @@ input[type=range] {
 	margin-right:auto;
     overflow:hidden;
   }
-  
+
   input[type=range]::-webkit-slider-thumb {
     box-shadow: -100vw 0 0 100vw red;
   }
@@ -312,16 +325,16 @@ input[type=range] {
   input[type=range]::-moz-range-thumb {
     box-shadow: -100vw 0 0 100vw red;
   }
-  
+
   input[type=range]:focus{
     outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
   }
-  
+
   input[type=range]::-ms-track {
     width: 100%;
     cursor: pointer;
     /* Hides the slider so custom styles can be added */
-    background: transparent; 
+    background: transparent;
     border-color: transparent;
     color: transparent;
   }
@@ -828,14 +841,14 @@ input[type=range] {
             color:#00b4c1;
             transition:all 0.3s;
         }
-        
+
         #message:focus ~ .messageLabel{
             color:#00b4c1 !important;
             margin-top:-154px !important;
             font-size:13px !important;
             transition:all 0.3s !important;
         }
-        
+
         #message:not(:placeholder-shown) ~ .messageLabel{
             margin-top:-154px !important;
             font-size:13px !important;

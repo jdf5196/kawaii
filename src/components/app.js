@@ -6,6 +6,7 @@ import Episodes from './Pages/episodes.js';
 import Episode from './Pages/episode.js';
 import Blog from './Pages/blog.js';
 import Navbar from './components/navbar.js';
+import Dev from './components/dev.js';
 import Footer from './components/footer.js';
 import Edit from './Pages/edit.js';
 import Social from './components/social.js';
@@ -22,6 +23,7 @@ class App extends React.Component {
                 <Route exact path='/episodes/:episodeTitle' component={Episode} />
                 <Route exact path='/blog' component={Blog} />
                 <Route exact path='/edit' component={Edit} />
+                <Dev />
                 <Footer />
             </div>
         )
