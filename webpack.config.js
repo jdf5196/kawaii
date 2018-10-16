@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const CompressionPlugin = require("compression-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
 	entry: ["babel-polyfill", "./src/index.js"],
@@ -9,12 +10,17 @@ module.exports = {
 		filename: 'bundle.js',
 		publicPath: '/'
 	},
-	mode: "development",
+	mode: "production",
 	plugins: [
 		new webpack.ProvidePlugin({ 
         jQuery: 'jquery',
         $: 'jquery',
         jquery: 'jquery'
+		}),
+		new HtmlWebpackPlugin({
+            hash: true,
+            template: './src/index.html',
+            filename: './index.html'
 		}),
 		new CompressionPlugin({
 			asset: "[path].gz[query]",
