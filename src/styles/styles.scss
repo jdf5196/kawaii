@@ -196,9 +196,13 @@ body{
     border: solid 1px #fc00ff;
     line-height: 50px;
     font-family: Montserrat,sans-serif;
+    transition: background-color 500ms;
     &:hover{
         background-color:$c1;
     }
+}
+.playBtn.nonRef{
+    line-height: unset !important;
 }
 .homeDiv{
     margin-bottom:50px;

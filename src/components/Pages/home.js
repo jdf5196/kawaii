@@ -77,7 +77,7 @@ class Home extends React.Component{
 								<p className='date'>{this.state.latest.date} | {this.state.latest.length}</p>
 								<p className='description'>{this.state.latest.summary}</p>
 								<div className='homeBtns'>
-									<button onClick={this.play.bind(this)} className='playBtn' id={`${this.state.latest.title}-play`}>Play Episode</button><Link to={`/episodes/${this.state.latest.url}`} style={{ textDecoration: 'none', height: '50px', width:'110px'}} name='episode' className='playBtn'>More Info</Link>
+									<button onClick={this.play.bind(this)} className='playBtn nonRef' id={`${this.state.latest.title}-play`}>Play Episode</button><Link to={`/episodes/${this.state.latest.url}`} style={{ textDecoration: 'none', height: '50px', width:'110px'}} name='episode' className='playBtn'>More Info</Link>
 								</div>
 							</div>
 						</div>

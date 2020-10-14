@@ -19,7 +19,8 @@ const uuid = require('node-uuid');
 const secret = process.env.SECRET;
 const Auth = jwt({secret: secret, userProperty: 'payload'});
 const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    service: 'gmail',
+    host: 'smpt.gmail.com',
     auth: {
         user: process.env.EMAILADDRESS,
         pass: process.env.EPASS
@@ -257,10 +258,12 @@ router.post('/sendemail', (req, res)=>{
         replyTo: req.body.email,
         text: req.body.message,
         html: req.body.message
-    }, (err)=>{
+    }, (err, info)=>{
         if(err){
+	    console.log(err);
             res.status(500).send('Failed to send');
         }
+	console.log(info);
         transporter.close();
         res.json('Success')
     })
