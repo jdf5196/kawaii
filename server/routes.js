@@ -17,15 +17,18 @@ const db = 'mongodb://127.0.0.1:27017/kawaii';
 const jwt = require('express-jwt');
 const uuid = require('node-uuid');
 const secret = process.env.SECRET;
+const emailAddress = process.env.EMAILADDRESS;
+const email = process.env.EPASS;
 const Auth = jwt({secret: secret, userProperty: 'payload'});
+
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    host: 'smpt.gmail.com',
-    auth: {
-        user: process.env.EMAILADDRESS,
-        pass: process.env.EPASS
-    }
-})
+	host: 'mail.privateemail.com',
+	port: 465,
+	auth: {
+		user: emailAddress,
+		pass: email
+	}
+});
 
 
 var storage = multer.diskStorage({
@@ -252,20 +255,19 @@ router.put('/getepisode', (req,res)=>{
 
 router.post('/sendemail', (req, res)=>{
     transporter.sendMail({
-        from:process.env.EMAILADDRESS,
-        to: 'jfrancona87@gmail.com',
-        subject: `Website Message from ${req.body.name}`,
+        from: emailAddress,
+        to: 'kawaiitrashpodcast@gmail.com',
         replyTo: req.body.email,
+        subject: `Kawaii Trash Website Message from ${req.body.name}, ${req.body.email}`,
         text: req.body.message,
         html: req.body.message
-    }, (err, info)=>{
+    }, (err)=>{
         if(err){
-	    console.log(err);
+            console.log(err);
             res.status(500).send('Failed to send');
         }
-	console.log(info);
         transporter.close();
-        res.json('Success')
+        res.json('Success');
     })
 })
 

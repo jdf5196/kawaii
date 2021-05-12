@@ -900,6 +900,16 @@ input[type=range] {
     .epiDateLength{
         text-align:center;
     }
+    #description{
+        a{
+            color: #005867 !important;
+        }
+        p{
+            a{
+                color: #005867 !important;
+            }
+        }
+    }
 }
 .resourceWrapper{
     margin-bottom: 100px;
@@ -1140,7 +1150,7 @@ input[type=range] {
     display:block;
 }
 
-  @media (max-width: 810px){
+  @media (max-width: 992px){
       .epiList{
           width:75%;
       }

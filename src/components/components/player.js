@@ -59,7 +59,7 @@ class Player extends React.Component{
             this.playerHover(event);
         });
         block.addEventListener('mouseup', (event)=>{
-            this.clicked.bind(event)
+            this.clicked(event)
         });
         vBlock.addEventListener('mousedown', (event)=>{
             this.clickedVolume(event);
